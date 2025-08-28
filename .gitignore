@@ -1,0 +1,22 @@
+# Virtual environemnt stuff
+venv/
+.venv
+.env
+
+# Bytecode files
+__pycache__/
+*.pyc
+
+# Database
+db.sqlite3
+
+# IDE
+.idea
+*.swp
+*~
+
+# Other
+.DS_Store
+Thumbs.db
+
+
