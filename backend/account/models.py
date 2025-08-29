@@ -5,8 +5,8 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseU
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, username, password="None", **extra_fields):
-        if not email:
-            raise ValueError("You must enter an email address!")
+    #    if not email:
+    #        raise ValueError("You must enter an email!")
         if not username:
             raise ValueError("You must enter a username!")
         email = self.normalize_email(email) # lowercases 2nd part of email, to ensure no 2x

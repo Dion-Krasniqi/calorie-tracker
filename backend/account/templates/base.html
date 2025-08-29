@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>CalTrack</title>
+    </head>
+    <body>
+        <header>
+            <div>
+                <a href="/">Home</a>
+            </div>
+            <nav>
+            {% if user.is_authenticated %}
+                <span style="margin:12px">Signed in as {{user.username}}</span>
+                <form action="{% url 'logout' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit">Logout</button>
+                </form>
+            {% else %}
+                <a href="{% url 'login' %}">Login</a>
+                <a href="{% url 'register' %}">Register</a>
+            {% endif %}
+        </nav>
+        </header>
+        <div>
+            {% block content %}{% endblock %}
+        </div>
+        
+
+
+    </body>
+</html>
