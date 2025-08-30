@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.views.generic import CreateView
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.forms import AuthenticationForm
 
 from .forms import CustomRegistrationForm, CustomLoginForm 
 from .models import CustomUser
@@ -19,7 +20,7 @@ class CustomRegisterView(CreateView):
 
 class CustomLoginView(LoginView):
     template_name = "account/login.html"
-    authentication_form = CustomLoginForm
+    authentication_form = AuthenticationForm
 
 class CustomLogoutView(LogoutView):
     next_page = "/"
