@@ -32,7 +32,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True, blank=True, null=True)
     
     is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)  
+    is_staff = models.BooleanField(default=False)
+    expenditure = models.DecimalField(max_digits=5, decimal_places=1, blank=True, null=True) 
 
     objects = CustomUserManager() # links a CustomUser to a CustomUserManager
     

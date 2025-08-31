@@ -12,7 +12,7 @@ CustomUser = get_user_model()
 class CustomRegistrationForm(UserCreationForm):
     class Meta:
         model = CustomUser
-        fields = ["username"]
+        fields = ["username", "expenditure"]
         
 class CustomLoginForm(AuthenticationForm):
     username = forms.CharField(label = "username")
