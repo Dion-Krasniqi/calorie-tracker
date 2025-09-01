@@ -15,12 +15,12 @@ def log_food_view(request):
             logged_food = form.save(commit=False)
             logged_food.user = request.user
             logged_food.save()
-            return redirect('/')
+            return redirect('view_logs')
     else:
         form = LoggedFoodForm(initial={'date_consumed':date.today()})
 
     foods = Food.objects.all().order_by('name')
-    return render(request, 'calorie_balance/log_food.html',{'form':form, 'foods':foods})
+    return render(request, 'caloriebalance/log_food.html',{'form':form, 'foods':foods})
 
 @login_required
 def see_logs_view(request):

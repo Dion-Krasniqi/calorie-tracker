@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+    <h2>Food Diary</h2>
+    {% if not daily_logs %}
+        <p>You haven't logged any food</p>
+    {% else %}
+        {% for date, logs in daily_logs.items %}
+         <div class="daily-log">
+            <h2>Log for {{date|date:"F j, Y"}}</h2>
+            <ul class="food-list">
+                {% for log in logs %}
+                <li>
+                    <span>{{log.food.name}}</span>
+                    <span>-{{log.food_quantity}}</span>
+                    <span>-{{ log.calculate_calories|floatformat:2 }} kcal</span>
+                </li>
+                {% endfor %}
+            </ul>
+         </div>
+         <hr>
+        {% endfor %}
+    {% endif %}
+
+
+
+{% endblock %}
