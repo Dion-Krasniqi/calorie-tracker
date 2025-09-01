@@ -17,6 +17,6 @@ class LoggedFoodForm(forms.ModelForm):
     
     def clean_quantity(self):
         quantity = self.cleaned_data.get('quantity')
-        if quantity is not None and quantity<=0:
-            raise forms.ValidationError("Quantity must be positive number")
+        if quantity is not None and quantity<0:
+            raise forms.ValidationError("Quantity must be a non negative number")
         return quantity

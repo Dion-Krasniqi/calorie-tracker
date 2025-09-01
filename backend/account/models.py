@@ -33,7 +33,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
-    expenditure = models.DecimalField(max_digits=5, decimal_places=1, blank=True, null=True) 
+    expenditure = models.DecimalField(max_digits=9, decimal_places=2, blank=True, null=True) 
 
     objects = CustomUserManager() # links a CustomUser to a CustomUserManager
     

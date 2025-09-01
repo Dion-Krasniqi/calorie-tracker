@@ -15,7 +15,7 @@ def log_food_view(request):
             logged_food = form.save(commit=False)
             logged_food.user = request.user
 
-            logged_food.calories_consumed = (logged_food.quantity/100)*logged_food.calories
+            logged_food.calories_consumed = (logged_food.quantity/100)*logged_food.food.calories
             logged_food.save()
             return redirect('view_logs')
     else:
@@ -49,9 +49,15 @@ def see_logs_view(request):
 @login_required
 def view_dashboard(request):
     user = request.user
-    intake_today =10 + LoggedFood.objects.filter(user=request.user,date_consumed=date.today()).select_related('food').aggregate(total=Sum('calories_consumed'))['total'] or 0
-    # balance_today = user.expenditure - intake_today
+    intake_dict = LoggedFood.objects.filter(user=request.user,date_consumed=date.today()).select_related('food').aggregate(total=Sum('calories_consumed'))
+    if intake_dict.get('total') is None:
+        intake_today = 0
+    else:
+        intake_today = intake_dict.get('total')
+    template_parameters = {'intake_today':intake_today,}
 
-    return render(request, 'caloriebalance/dashboard.html',{'intake_today':intake_today,
-                                        #'balance_today':balance_today,
-                                        })
+    if user.expenditure is not None:
+        balance_today = user.expenditure - intake_today
+        template_parameters['balance_today'] = balance_today
+        
+    return render(request, 'caloriebalance/dashboard.html',template_parameters)
