@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.db.models import F
+from django.db.models import F, Sum
 from datetime import date
 from .forms import LoggedFoodForm
 from .models import LoggedFood, Food
@@ -14,6 +14,8 @@ def log_food_view(request):
         if form.is_valid():
             logged_food = form.save(commit=False)
             logged_food.user = request.user
+
+            logged_food.calories_consumed = (logged_food.quantity/100)*logged_food.calories
             logged_food.save()
             return redirect('view_logs')
     else:
@@ -44,3 +46,12 @@ def see_logs_view(request):
     return render(request, 'caloriebalance/view_logs.html', {'daily_logs':daily_logs})
 
 
+@login_required
+def view_dashboard(request):
+    user = request.user
+    intake_today =10 + LoggedFood.objects.filter(user=request.user,date_consumed=date.today()).select_related('food').aggregate(total=Sum('calories_consumed'))['total'] or 0
+    # balance_today = user.expenditure - intake_today
+
+    return render(request, 'caloriebalance/dashboard.html',{'intake_today':intake_today,
+                                        #'balance_today':balance_today,
+                                        })

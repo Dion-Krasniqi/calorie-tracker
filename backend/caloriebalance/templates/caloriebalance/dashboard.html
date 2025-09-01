@@ -2,8 +2,10 @@
 {% block content %}
     {% if user.is_authenticated %}
         <h2>Welcome {{user.username}}</h2>
+        <p> {{ intake_today}} </p>
     {% else %}
-        <p><a href="{% url 'login' %}">Login</a> or <a href="{% url 'register' %}">Register</a></p>
+        <p><a href="{% url 'login' %}">Login</a> or <a href="{% url 'register' %}">Register</a></p>  
     {% endif %}
+
 {% endblock %}
 

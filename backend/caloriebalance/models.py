@@ -28,9 +28,9 @@ class LoggedFood(models.Model):
 
     quantity = models.DecimalField(max_digits=7, decimal_places=2) # in grams
     date_consumed = models.DateField(auto_now_add=False, auto_now=False)
-
-    def calculate_calories(self):
-        return (self.quantity/100*self.food.calories)
+    calories_consumed = models.DecimalField(max_digits=9, decimal_places=2)
+    # def calculate_calories(self):
+    #   return (self.quantity/100.0*self.food.calories)
     
     def __str__(self):
         return f"{self.user.username} logged {self.quantity} of {self.food.name} on {self.date_consumed}"
