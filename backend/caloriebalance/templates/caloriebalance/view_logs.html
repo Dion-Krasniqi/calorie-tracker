@@ -13,6 +13,10 @@
                     <span>{{log.food.name}}</span>
                     <span>-{{log.food_quantity}}</span>
                     <span>-{{ log.calculate_calories|floatformat:2 }} kcal</span>
+                    <form action="{% url 'delete_logged_food' log.id %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit">Delete</button>
+                    </form>
                 </li>
                 {% endfor %}
             </ul>

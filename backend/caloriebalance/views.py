@@ -25,7 +25,7 @@ def log_food_view(request):
 @login_required
 def delete_logged_food(request, logged_food_id):
     logged_food = get_object_or_404(LoggedFood, id=logged_food_id)
-    if logged_food.user==request.user or request.user.is_staff():
+    if logged_food.user==request.user or request.user.is_staff:
         logged_food.delete()
     return redirect('view_logs')
 
