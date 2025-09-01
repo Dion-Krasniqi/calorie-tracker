@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db.models import F
 from datetime import date
@@ -23,6 +23,15 @@ def log_food_view(request):
     return render(request, 'caloriebalance/log_food.html',{'form':form, 'foods':foods})
 
 @login_required
+def delete_logged_food(request, logged_food_id):
+    logged_food = get_object_or_404(LoggedFood, id=logged_food_id)
+    if logged_food.user==request.user or request.user.is_staff():
+        logged_food.delete()
+    return redirect('view_logs')
+
+
+
+@login_required
 def see_logs_view(request):
     all_logs = LoggedFood.objects.filter(user=request.user).select_related('food').order_by(F('date_consumed').desc())
 
@@ -33,3 +42,5 @@ def see_logs_view(request):
             daily_logs[date_key]=[]
         daily_logs[date_key].append(log)
     return render(request, 'caloriebalance/view_logs.html', {'daily_logs':daily_logs})
+
+
