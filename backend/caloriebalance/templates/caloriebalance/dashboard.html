@@ -2,8 +2,8 @@
 {% block content %}
     {% if user.is_authenticated %}
         <h2>Welcome {{user.username}}</h2>
-        <p> {{ intake_today}} </p>
-        {% if balance_today %}<p>{{ balance_today }}</p>{% endif %}
+        <p>Calories consumed today: {{ intake_today}} kcal</p>
+        {% if balance_today %}<p>Calories left: {{ balance_today }} kcal</p>{% endif %}
     {% else %}
         <p><a href="{% url 'login' %}">Login</a> or <a href="{% url 'register' %}">Register</a></p>  
     {% endif %}

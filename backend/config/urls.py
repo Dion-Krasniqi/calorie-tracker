@@ -17,11 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
+from caloriebalance import views as vw
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('account/', include('account.urls')),
     path('caloriebalance/', include('caloriebalance.urls')),
-    path('', TemplateView.as_view(template_name="home.html")),
+    path('', vw.view_dashboard,),
 
 ]

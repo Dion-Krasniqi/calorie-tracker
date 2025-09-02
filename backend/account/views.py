@@ -4,13 +4,12 @@ from django.views.generic import CreateView
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.decorators import login_required
 
-from .forms import CustomRegistrationForm, CustomLoginForm 
+from .forms import CustomRegistrationForm, CustomLoginForm, ProfileForm 
 from .models import CustomUser
 # Create your views here.
 
-def home(request):
-    return HttpResponse('This will redirect you to dashboard/main page')
 
 class CustomRegisterView(CreateView):
     model = CustomUser
@@ -24,3 +23,20 @@ class CustomLoginView(LoginView):
 
 class CustomLogoutView(LogoutView):
     next_page = "/"
+
+@login_required
+def home(request):
+    user = request.user
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+    else:
+            form = ProfileForm(instance=user)
+
+    return render(request, "account/profile.html", {'form':form})
+
+    # return HttpResponse('This will redirect you to dashboard/main page')
+
+    
