@@ -17,7 +17,7 @@ def log_food_view(request):
 
             logged_food.calories_consumed = (logged_food.quantity/100)*logged_food.food.calories
             logged_food.save()
-            return redirect('view_logs')
+            return redirect('/')
     else:
         form = LoggedFoodForm(initial={'date_consumed':date.today()})
 
@@ -57,7 +57,8 @@ def view_dashboard(request):
     template_parameters = {'intake_today':intake_today,}
 
     if user.expenditure is not None:
-        balance_today = user.expenditure - intake_today
-        template_parameters['balance_today'] = balance_today
+        if user.expenditure!=0.00:
+            balance_today = user.expenditure - intake_today
+            template_parameters['balance_today'] = balance_today
         
     return render(request, 'caloriebalance/dashboard.html',template_parameters)
