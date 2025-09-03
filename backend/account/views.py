@@ -6,6 +6,11 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 
+from django.contrib.auth import login, authenticate, logout
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+
 from .forms import CustomRegistrationForm, CustomLoginForm, ProfileForm 
 from .models import CustomUser
 # Create your views here.
@@ -17,12 +22,36 @@ class CustomRegisterView(CreateView):
     template_url = "account/register.html"
     success_url = reverse_lazy("login")
 
-class CustomLoginView(LoginView):
-    template_name = "account/login.html"
-    authentication_form = AuthenticationForm
+# class CustomLoginView(LoginView):
+#    template_name = "account/login.html"
+#    authentication_form = AuthenticationForm
 
-class CustomLogoutView(LogoutView):
-    next_page = "/"
+class LoginAPI_view(APIView):
+     def post(self, request):
+          
+          user = authenticate(
+               request,
+               username = request.data.get('username'),
+               password = request.data.get('password')
+          )
+
+          if user:
+               login(request, user)
+               return Response({"status":"Logged in"})
+          return Response({"error":"Invalid credentials"}, status=400)
+     
+
+# class CustomLogoutView(LogoutView):
+#    next_page = "/"
+
+class LogoutAPI_view(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+         logout(request)
+         return Response({"status":"Logged out"})
+
+
 
 @login_required
 def home(request):

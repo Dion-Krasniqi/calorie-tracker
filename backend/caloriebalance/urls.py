@@ -9,5 +9,8 @@ urlpatterns = [
 
     path('api/logs/', views.LoggedFoodListAPI_view.as_view(), name="api_logs_list"),
     path('api/add/', views.LogFoodAPI_view.as_view(), name="api_add_food"),
+    path('api/deletelog/<int:pk>/', views.DeleteLogAPI_view.as_view(), name="api_delete_log"),
+
+    path('home/', views.DashboardAPI_view.as_view(), name="home")
     
 ]

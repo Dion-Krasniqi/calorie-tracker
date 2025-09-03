@@ -1,5 +1,7 @@
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
@@ -10,7 +12,35 @@ from .forms import LoggedFoodForm
 from .models import LoggedFood, Food
 from .serializers import LoggedFoodSerializer
 
+
+
 # Create your views here.
+@login_required
+def view_dashboard(request):
+    user = request.user
+    intake_dict = LoggedFood.objects.filter(user=request.user,date_consumed=date.today()).select_related('food').aggregate(total=Sum('calories_consumed'))
+    if intake_dict.get('total') is None:
+        intake_today = 0
+    else:
+        intake_today = intake_dict.get('total')
+    template_parameters = {'intake_today':intake_today,}
+
+    if user.expenditure is not None:
+        if user.expenditure!=0.00:
+            balance_today = user.expenditure - intake_today
+            template_parameters['balance_today'] = balance_today
+        
+    return render(request, 'caloriebalance/dashboard.html',template_parameters)
+
+
+class DashboardAPI_view(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        return Response({"message":f"Welcome {request.user.username}!"})
+
+
+
 
 @login_required
 def log_food_view(request):
@@ -50,25 +80,6 @@ def see_logs_view(request):
         daily_logs[date_key].append(log)
     return render(request, 'caloriebalance/view_logs.html', {'daily_logs':daily_logs})
 
-
-@login_required
-def view_dashboard(request):
-    user = request.user
-    intake_dict = LoggedFood.objects.filter(user=request.user,date_consumed=date.today()).select_related('food').aggregate(total=Sum('calories_consumed'))
-    if intake_dict.get('total') is None:
-        intake_today = 0
-    else:
-        intake_today = intake_dict.get('total')
-    template_parameters = {'intake_today':intake_today,}
-
-    if user.expenditure is not None:
-        if user.expenditure!=0.00:
-            balance_today = user.expenditure - intake_today
-            template_parameters['balance_today'] = balance_today
-        
-    return render(request, 'caloriebalance/dashboard.html',template_parameters)
-
-
 class LoggedFoodListAPI_view(generics.ListAPIView):
     queryset = LoggedFood.objects.all()
     serializer_class = LoggedFoodSerializer
@@ -80,7 +91,7 @@ class LoggedFoodListAPI_view(generics.ListAPIView):
 class LogFoodAPI_view(generics.CreateAPIView):
     queryset = LoggedFood.objects.all()
     serializer_class = LoggedFoodSerializer
-    permission_class = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
         food_instance = serializer.validated_data.get('food')
@@ -89,3 +100,9 @@ class LogFoodAPI_view(generics.CreateAPIView):
         calories_consumed = (quantity/100) * food_instance.calories
 
         serializer.save(user=self.request.user, calories_consumed=calories_consumed)
+
+class DeleteLogAPI_view(generics.DestroyAPIView):
+    queryset = LoggedFood.objects.all()
+    
+    def get_queryset(self):
+        return self.queryset.filter(user=self.request.user)
