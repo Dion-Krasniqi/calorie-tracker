@@ -1,9 +1,14 @@
+from rest_framework import generics
+from rest_framework.permissions import IsAuthenticated
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db.models import F, Sum
 from datetime import date
+
 from .forms import LoggedFoodForm
 from .models import LoggedFood, Food
+from .serializers import LoggedFoodSerializer
 
 # Create your views here.
 
@@ -62,3 +67,25 @@ def view_dashboard(request):
             template_parameters['balance_today'] = balance_today
         
     return render(request, 'caloriebalance/dashboard.html',template_parameters)
+
+
+class LoggedFoodListAPI_view(generics.ListAPIView):
+    queryset = LoggedFood.objects.all()
+    serializer_class = LoggedFoodSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return self.queryset.filter(user=self.request.user).order_by('-date_consumed')
+    
+class LogFoodAPI_view(generics.CreateAPIView):
+    queryset = LoggedFood.objects.all()
+    serializer_class = LoggedFoodSerializer
+    permission_class = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        food_instance = serializer.validated_data.get('food')
+        quantity = serializer.validated_data.get('quantity')
+
+        calories_consumed = (quantity/100) * food_instance.calories
+
+        serializer.save(user=self.request.user, calories_consumed=calories_consumed)
