@@ -13,7 +13,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
-        fields = ('username', 'password')
+        fields = ('username', 'password', 'expenditure')
     def create(self, validated_data):
         validated_data['password'] = make_password(validated_data['password'])
         return super(UserSerializer, self).create(validated_data)

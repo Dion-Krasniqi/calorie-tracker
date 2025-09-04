@@ -60,29 +60,11 @@ class LogoutAPI_view(APIView):
          except:
               return Response({"status":"Logout failed"}, status=status.HTTP_404_BAD_REQUEST)
 
-
-
-#@login_required
-#def home(request):
-#    user = request.user
-#    if request.method == 'POST':
-#        form = ProfileForm(request.POST, instance=user)
-#       if form.is_valid():
-#            form.save()
-#           return redirect('profile')
-#    else:
-#            form = ProfileForm(instance=user)
-#
-#    return render(request, "account/profile.html", {'form':form})
-#
-    
-
-    
-class HomeAPI_view(APIView):
+class HomeAPI_view(generics.RetrieveUpdateAPIView):
      authentication_classes = [TokenAuthentication]
      permission_classes = [IsAuthenticated]
+     queryset = User.objects.all()
+     serializer_class = UserSerializer
      
-     def post(self,request):
-          return Response({"status":"Whats up"})
-     def get(self,request):
-          return Response({"status":"Whats up"})
+     def get_object(self):
+          return self.request.user

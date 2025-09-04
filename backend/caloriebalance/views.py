@@ -80,31 +80,13 @@ def see_logs_view(request):
             daily_logs[date_key]=[]
         daily_logs[date_key].append(log)
     return render(request, 'caloriebalance/view_logs.html', {'daily_logs':daily_logs})
-
-class LoggedFoodListAPI_view(generics.ListAPIView):
-    queryset = LoggedFood.objects.all()
-    serializer_class = LoggedFoodSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        return self.queryset.filter(user=self.request.user).order_by('-date_consumed')
     
 class LogFoodAPI_view(generics.CreateAPIView):
     queryset = LoggedFood.objects.all()
     serializer_class = LoggedFoodSerializer
-    permission_classes = [IsAuthenticated]
     authentication_classes = [TokenAuthentication]
-
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        print(request.user) # <--- ADD THIS LINE
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
+    permission_classes = [IsAuthenticated]
     
-
     def perform_create(self, serializer):
         food_instance = serializer.validated_data.get('food')
         quantity = serializer.validated_data.get('quantity')
@@ -113,9 +95,27 @@ class LogFoodAPI_view(generics.CreateAPIView):
 
         serializer.save(user=self.request.user, calories_consumed=calories_consumed)
 
-class DeleteLogAPI_view(generics.DestroyAPIView):
-    queryset = LoggedFood.objects.all()
+#class DeleteLogAPI_view(generics.DestroyAPIView):
+#    queryset = LoggedFood.objects.all()
+#    
+#    def get_queryset(self):
+#        return self.queryset.filter(user=self.request.user)
     
+class LoggedFoodDetailAPI_view(generics.RetrieveDestroyAPIView):
+    serializer_class = LoggedFoodSerializer
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return LoggedFood.objects.filter(user=self.request.user)
+    
+    
+class LoggedFoodListAPI_view(generics.ListAPIView):
+    queryset = LoggedFood.objects.all()
+    serializer_class = LoggedFoodSerializer
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
     def get_queryset(self):
         return self.queryset.filter(user=self.request.user)
     
@@ -123,6 +123,8 @@ class DeleteLogAPI_view(generics.DestroyAPIView):
 class FoodListAPI_view(generics.ListAPIView):
     queryset = Food.objects.all()
     serializer_class = FoodSerializer
+    authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
     
+

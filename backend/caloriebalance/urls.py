@@ -10,7 +10,7 @@ urlpatterns = [
     path('api/logs/', views.LoggedFoodListAPI_view.as_view(), name="api_logs_list"),
     path('api/add/', views.LogFoodAPI_view.as_view(), name="api_add_food"),
     path('api/foodlist/', views.FoodListAPI_view.as_view(), name="api_food_list"),
-    path('api/deletelog/<int:pk>/', views.DeleteLogAPI_view.as_view(), name="api_delete_log"),
+    path('api/logs/<int:pk>/', views.LoggedFoodDetailAPI_view.as_view(), name="api_logs_detail"),
 
     path('home/', views.DashboardAPI_view.as_view(), name="home")
     
