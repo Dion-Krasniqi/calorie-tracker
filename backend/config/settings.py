@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'account',
     'caloriebalance',
     'rest_framework',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -129,3 +130,10 @@ AUTH_USER_MODEL = "account.CustomUser"
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_URL = "/"
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES' : [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+}

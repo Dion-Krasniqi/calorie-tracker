@@ -1,5 +1,6 @@
-from rest_framework import generics
+from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
@@ -10,7 +11,7 @@ from datetime import date
 
 from .forms import LoggedFoodForm
 from .models import LoggedFood, Food
-from .serializers import LoggedFoodSerializer
+from .serializers import LoggedFoodSerializer, FoodSerializer
 
 
 
@@ -35,7 +36,7 @@ def view_dashboard(request):
 
 class DashboardAPI_view(APIView):
     permission_classes = [IsAuthenticated]
-
+    authentication_classes = [TokenAuthentication]
     def get(self, request):
         return Response({"message":f"Welcome {request.user.username}!"})
 
@@ -92,6 +93,17 @@ class LogFoodAPI_view(generics.CreateAPIView):
     queryset = LoggedFood.objects.all()
     serializer_class = LoggedFoodSerializer
     permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        print(request.user) # <--- ADD THIS LINE
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    
 
     def perform_create(self, serializer):
         food_instance = serializer.validated_data.get('food')
@@ -106,3 +118,11 @@ class DeleteLogAPI_view(generics.DestroyAPIView):
     
     def get_queryset(self):
         return self.queryset.filter(user=self.request.user)
+    
+
+class FoodListAPI_view(generics.ListAPIView):
+    queryset = Food.objects.all()
+    serializer_class = FoodSerializer
+    permission_classes = [IsAuthenticated]
+
+    

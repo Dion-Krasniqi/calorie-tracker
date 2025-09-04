@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
+from rest_framework.authtoken import views
 from caloriebalance import views as vw
 
 urlpatterns = [
@@ -24,5 +25,7 @@ urlpatterns = [
     path('account/', include('account.urls')),
     path('caloriebalance/', include('caloriebalance.urls')),
     path('', vw.view_dashboard,),
+
+    path('api/login/', views.obtain_auth_token)
 
 ]
