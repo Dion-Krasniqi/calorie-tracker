@@ -81,7 +81,7 @@ def see_logs_view(request):
         daily_logs[date_key].append(log)
     return render(request, 'caloriebalance/view_logs.html', {'daily_logs':daily_logs})
     
-class LogFoodAPI_view(generics.CreateAPIView):
+class LogFoodAPI_view(generics.CreateAPIView): # Logging food
     queryset = LoggedFood.objects.all()
     serializer_class = LoggedFoodSerializer
     authentication_classes = [TokenAuthentication]
@@ -101,7 +101,8 @@ class LogFoodAPI_view(generics.CreateAPIView):
 #    def get_queryset(self):
 #        return self.queryset.filter(user=self.request.user)
     
-class LoggedFoodDetailAPI_view(generics.RetrieveDestroyAPIView):
+
+class LoggedFoodDetailAPI_view(generics.RetrieveUpdateDestroyAPIView): # Single logged food editing
     serializer_class = LoggedFoodSerializer
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -109,8 +110,16 @@ class LoggedFoodDetailAPI_view(generics.RetrieveDestroyAPIView):
     def get_queryset(self):
         return LoggedFood.objects.filter(user=self.request.user)
     
+    def perform_update(self, serializer):
+        food_instance = serializer.instance.food
+        quantity = serializer.validated_data.get('quantity', serializer.instance.quantity)
+
+        calories_consumed = (quantity/100) * food_instance.calories
+        serializer.save(calories_consumed=calories_consumed)
+        
     
-class LoggedFoodListAPI_view(generics.ListAPIView):
+    
+class LoggedFoodListAPI_view(generics.ListAPIView): # All logged foods
     queryset = LoggedFood.objects.all()
     serializer_class = LoggedFoodSerializer
     authentication_classes = [TokenAuthentication]
@@ -120,7 +129,7 @@ class LoggedFoodListAPI_view(generics.ListAPIView):
         return self.queryset.filter(user=self.request.user)
     
 
-class FoodListAPI_view(generics.ListAPIView):
+class FoodListAPI_view(generics.ListAPIView): # All foods in the database
     queryset = Food.objects.all()
     serializer_class = FoodSerializer
     authentication_classes = [TokenAuthentication]
@@ -128,3 +137,34 @@ class FoodListAPI_view(generics.ListAPIView):
 
     
 
+class GetDailyIntakeAPI_view(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self,request):
+        requested_date = request.query_params.get('date', None)
+        if requested_date:
+            try:
+                requested_date = date.isoformat(requested_date)
+            except ValueError:
+                return Response({"error":"Date must be of format YYYY-MM-DD"}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            requested_date = date.today()
+        
+        daily_log = LoggedFood.objects.filter(user=request.user, date_consumed=requested_date)
+
+        total_calories = daily_log.aggregate(Sum('calories_consumed'))['calories_consumed__sum'] or 0
+        expenditure = request.user.expenditure 
+        response_data = {
+            'date':requested_date,
+            'total_calories':round(total_calories,2),
+            'expenditure':expenditure
+        }
+        if expenditure is not None:
+            if expenditure > 0:
+                remaining_calories = expenditure - total_calories
+                response_data['remaining_calories']=round(remaining_calories,2)
+
+        return Response(response_data, status=status.HTTP_200_OK)
+
+    

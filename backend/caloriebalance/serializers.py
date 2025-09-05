@@ -7,8 +7,13 @@ class LoggedFoodSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = LoggedFood
-        fields = ['id', 'food', 'quantity', 'date_consumed']
+        fields = ['id', 'food', 'quantity', 'date_consumed', 'calories_consumed']
         read_only_fields = ['calories_consumed']
+    
+    def validate_food(self, value):
+        if self.instance and 'food' in self.initial_data:
+            raise serializers.ValidationError("You cannot change food field")
+        return value
 
 class FoodSerializer(serializers.ModelSerializer):
 
