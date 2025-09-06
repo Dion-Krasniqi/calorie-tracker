@@ -7,7 +7,8 @@ from rest_framework.response import Response
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db.models import F, Sum
-from datetime import date
+from django.db.models.functions import TruncDate
+from datetime import date, timedelta
 
 from .forms import LoggedFoodForm
 from .models import LoggedFood, Food
@@ -135,39 +136,6 @@ class FoodListAPI_view(generics.ListAPIView): # All foods in the database
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
-    
-
-class GetDailyIntakeAPI_view(APIView):
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
-
-    def get(self,request):
-        requested_date = request.query_params.get('date', None)
-        if requested_date:
-            try:
-                requested_date = date.isoformat(requested_date)
-            except ValueError:
-                return Response({"error":"Date must be of format YYYY-MM-DD"}, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            requested_date = date.today()
-        
-        daily_log = LoggedFood.objects.filter(user=request.user, date_consumed=requested_date)
-
-        total_calories = daily_log.aggregate(Sum('calories_consumed'))['calories_consumed__sum'] or 0
-        expenditure = request.user.expenditure 
-        response_data = {
-            'date':requested_date,
-            'total_calories':round(total_calories,2),
-            'expenditure':expenditure
-        }
-        if expenditure is not None:
-            if expenditure > 0:
-                remaining_calories = expenditure - total_calories
-                response_data['remaining_calories']=round(remaining_calories,2)
-
-        return Response(response_data, status=status.HTTP_200_OK)
-
-    
 class FoodSearchAPI_view(generics.ListAPIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -193,6 +161,80 @@ class FoodSearchAPI_view(generics.ListAPIView):
             queryset = queryset.filter(brand__icontains=food_brand)    
         
         return queryset
+    
+    
+class GetDailyIntakeAPI_view(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self,request):
+        requested_date = request.query_params.get('date', None)
+        if requested_date:
+            try:
+                requested_date = date.fromisoformat(requested_date)
+            except ValueError:
+                return Response({"error":"Date must be of format YYYY-MM-DD"}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            requested_date = date.today()
+        
+        daily_log = LoggedFood.objects.filter(user=request.user, date_consumed=requested_date)
+
+        total_calories = daily_log.aggregate(Sum('calories_consumed'))['calories_consumed__sum'] or 0
+        expenditure = request.user.expenditure 
+        response_data = {
+            'date':requested_date,
+            'total_calories':round(total_calories,2),
+            'expenditure':expenditure
+        }
+        if expenditure is not None:
+            if expenditure > 0:
+                remaining_calories = expenditure - total_calories
+                response_data['remaining_calories']=round(remaining_calories,2)
+
+        return Response(response_data, status=status.HTTP_200_OK)
                 
         
         
+class GetPeriodIntakeAPI_view(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        requested_start_date = request.query_params.get('start_date', None)
+        requested_end_date = request.query_params.get('end_date', None)
+        
+        if requested_start_date:
+            try:
+                requested_start_date = date.fromisoformat(requested_start_date)
+            except ValueError:
+                return Response({"error":"Date must be of format YYYYY-MM-DD"}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({"errror":"You must enter a starting date"}, status=status.HTTP_400_BAD_REQUEST)
+
+        if requested_end_date:
+            try:
+                requested_end_date = date.fromisoformat(requested_end_date)
+            except ValueError:
+                return Response({"error":"Date must be of format YYYY-MM-DD"}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            requested_end_date = date.today()
+        
+        if requested_end_date< requested_start_date:
+            return Response({"error":"Start date cannot be after end date"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+        period_log = LoggedFood.objects.filter(user=request.user, date_consumed__range=[requested_start_date, requested_end_date])
+
+        date_totals = {}
+        current_date = requested_start_date
+        while current_date <= requested_end_date:
+            date_totals[current_date] = 0
+            current_date += timedelta(days=1)
+        for log in period_log:
+            date_totals[log.date_consumed] += log.calories_consumed
+
+        response_data = []
+        for day, total in date_totals.items():
+            response_data.append({'date':day, 'total_calories':round(total, 2)})  
+
+        return Response(sorted(response_data,key =lambda x: x['date']), status=status.HTTP_200_OK)
