@@ -168,3 +168,31 @@ class GetDailyIntakeAPI_view(APIView):
         return Response(response_data, status=status.HTTP_200_OK)
 
     
+class FoodSearchAPI_view(generics.ListAPIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    serializer_class = FoodSerializer
+
+    def get(self, request, *args, **kwaargs):
+        food_name = request.query_params.get('name', None)
+        food_brand = request.query_params.get('brand', None)
+
+        if food_name is None and food_brand is None:
+            return Response({"error":"You must enter the name or brand of the food"}, status=status.HTTP_400_BAD_REQUEST) 
+
+        return super().get(request, *args, **kwaargs)   
+
+    def get_queryset(self):
+
+        queryset = Food.objects.all()
+        food_name = self.request.query_params.get('name',None)
+        food_brand = self.request.query_params.get('brand',None)
+        if food_name:
+            queryset = queryset.filter(name__icontains=food_name)
+        if food_brand:
+            queryset = queryset.filter(brand__icontains=food_brand)    
+        
+        return queryset
+                
+        
+        
