@@ -180,16 +180,23 @@ class GetDailyIntakeAPI_view(APIView):
         daily_log = LoggedFood.objects.filter(user=request.user, date_consumed=requested_date)
 
         total_calories = daily_log.aggregate(Sum('calories_consumed'))['calories_consumed__sum'] or 0
-        expenditure = request.user.expenditure 
+        total_macros = {'protein':daily_log.aggregate(Sum('food__protein'))['food__protein__sum'] or 0,
+                        'carbohydrates':daily_log.aggregate(Sum('food__carbohydrates'))['food__carbohydrates__sum'] or 0,
+                        'fats':daily_log.aggregate(Sum('food__fats'))['food__fats__sum'] or 0,}
+         
         response_data = {
             'date':requested_date,
-            'total_calories':round(total_calories,2),
-            'expenditure':expenditure
+            'total_calories':round(total_calories, 2),
+            'protein': round(total_macros['protein'], 2),
+            'carbohydrates': round(total_macros['carbohydrates'], 2),
+            'fats': round(total_macros['fats'], 2),
         }
+        expenditure = request.user.expenditure   
         if expenditure is not None:
             if expenditure > 0:
                 remaining_calories = expenditure - total_calories
                 response_data['remaining_calories']=round(remaining_calories,2)
+                response_data['expenditure'] = expenditure
 
         return Response(response_data, status=status.HTTP_200_OK)
                 
@@ -226,15 +233,29 @@ class GetPeriodIntakeAPI_view(APIView):
         period_log = LoggedFood.objects.filter(user=request.user, date_consumed__range=[requested_start_date, requested_end_date])
 
         date_totals = {}
+       # macro_totals = {}
         current_date = requested_start_date
         while current_date <= requested_end_date:
-            date_totals[current_date] = 0
+            date_totals[current_date] = {'calories':0, 'protein':0, 'carbohydrates':0, 'fats':0}
+        #    macro_totals[current_date] = []
             current_date += timedelta(days=1)
         for log in period_log:
-            date_totals[log.date_consumed] += log.calories_consumed
+            date_totals[log.date_consumed]['calories'] += log.calories_consumed or 0
+            date_totals[log.date_consumed]['protein'] += log.food.protein or 0
+            date_totals[log.date_consumed]['carbohydrates'] += log.food.carbohydrates or 0
+            date_totals[log.date_consumed]['fats'] += log.food.fats or 0
+       # for log in period_log:
+       #     date_totals[log.date_consumed] += log.calories_consumed
+       #     macro_totals[log.date_consumed].append(log.protein)
+       #     macro_totals[log.date_consumed].append(log.carbohydrates)
+       #     macro_totals[log.date_consumed].append(log.fats)
 
         response_data = []
-        for day, total in date_totals.items():
-            response_data.append({'date':day, 'total_calories':round(total, 2)})  
+        for day, totals in date_totals.items():
+            response_data.append({'date':day,
+                                  'total_calories':round(totals['calories'],2),
+                                  'total_protein':round(totals['protein'],2),
+                                  'total_carbohydrates':round(totals['carbohydrates'],2),
+                                  'total_fats':round(totals['fats'],2)})  
 
         return Response(sorted(response_data,key =lambda x: x['date']), status=status.HTTP_200_OK)
