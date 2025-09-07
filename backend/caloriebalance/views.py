@@ -185,7 +185,7 @@ class GetDailyIntakeAPI_view(APIView):
                         'fats':daily_log.aggregate(Sum('food__fats'))['food__fats__sum'] or 0,}
          
         response_data = {
-            'date':requested_date,
+            'date':requested_date.isoformat,
             'total_calories':round(total_calories, 2),
             'protein': round(total_macros['protein'], 2),
             'carbohydrates': round(total_macros['carbohydrates'], 2),
@@ -252,10 +252,52 @@ class GetPeriodIntakeAPI_view(APIView):
 
         response_data = []
         for day, totals in date_totals.items():
-            response_data.append({'date':day,
+            response_data.append({'date':day.isoformat(),
                                   'total_calories':round(totals['calories'],2),
                                   'total_protein':round(totals['protein'],2),
                                   'total_carbohydrates':round(totals['carbohydrates'],2),
                                   'total_fats':round(totals['fats'],2)})  
 
         return Response(sorted(response_data,key =lambda x: x['date']), status=status.HTTP_200_OK)
+
+class GetRunningAverageAPI_view(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        requested_date = request.query_params.get('date', None)
+        if requested_date:
+            try:
+                requested_date = date.fromisoformat(requested_date)
+            except ValueError:
+                return Response({"error":"Date must be of format YYYYY-MM-DD"}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            requested_date = date.today()
+
+        start_date = requested_date - timedelta(days=6)
+
+        period_logs = LoggedFood.objects.filter(user=request.user, date_consumed__range=[start_date, requested_date])
+
+        date_totals = {}
+        for i in range(7):
+            date_totals[start_date + timedelta(days=i)]=0
+
+        for log in period_logs:
+            if log.date_consumed in date_totals:
+                date_totals[log.date_consumed] += log.calories_consumed
+
+        total_calories = sum(date_totals.values())
+
+        if len(date_totals) > 0:
+            average_calories = round(total_calories/len(date_totals), 2)
+        else:
+            average_calories = 0
+        
+        response_data = {
+            'date': requested_date.isoformat(),
+            'average_calories': average_calories,
+        }
+
+        return Response(response_data, status=status.HTTP_200_OK)
+
+        

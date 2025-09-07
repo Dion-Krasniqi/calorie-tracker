@@ -58,7 +58,7 @@ class LogoutAPI_view(APIView):
               request.user.auth_token.delete()
               return Response(status=status.HTTP_200_OK)
          except:
-              return Response({"status":"Logout failed"}, status=status.HTTP_404_BAD_REQUEST)
+              return Response({"status":"Logout failed"}, status=status.HTTP_400_BAD_REQUEST)
 
 class HomeAPI_view(generics.RetrieveUpdateAPIView):
      authentication_classes = [TokenAuthentication]

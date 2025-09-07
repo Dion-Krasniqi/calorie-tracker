@@ -15,6 +15,7 @@ urlpatterns = [
     
     path('api/stats/daily/', views.GetDailyIntakeAPI_view.as_view(), name="api_daily_stats"),
     path('api/stats/period/', views.GetPeriodIntakeAPI_view.as_view(), name="api_period_stats"),
+    path('api/stats/average/', views.GetRunningAverageAPI_view.as_view(), name="api_average_stats"),
 
 
     path('home/', views.DashboardAPI_view.as_view(), name="home")
