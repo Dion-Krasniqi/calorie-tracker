@@ -46,7 +46,7 @@ class LoginAPI_view(APIView):
           if user:
                token, created = Token.objects.get_or_create(user=user)
                return Response({"token":token.key})
-          return Response({"error":"Invalid credentials"}, status=status.HTTP_404_BAD_REQUEST)
+          return Response({"error":"Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class LogoutAPI_view(APIView):

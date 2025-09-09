@@ -141,14 +141,14 @@ class FoodSearchAPI_view(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = FoodSerializer
 
-    def get(self, request, *args, **kwaargs):
+    def get(self, request, *args, **kwargs):
         food_name = request.query_params.get('name', None)
         food_brand = request.query_params.get('brand', None)
 
         if food_name is None and food_brand is None:
             return Response({"error":"You must enter the name or brand of the food"}, status=status.HTTP_400_BAD_REQUEST) 
 
-        return super().get(request, *args, **kwaargs)   
+        return super().get(request, *args, **kwargs)   
 
     def get_queryset(self):
 
@@ -158,8 +158,7 @@ class FoodSearchAPI_view(generics.ListAPIView):
         if food_name:
             queryset = queryset.filter(name__icontains=food_name)
         if food_brand:
-            queryset = queryset.filter(brand__icontains=food_brand)    
-        
+            queryset = queryset.filter(brand__icontains=food_brand)   
         return queryset
     
     
