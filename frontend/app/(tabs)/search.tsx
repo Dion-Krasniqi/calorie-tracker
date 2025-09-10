@@ -1,39 +1,50 @@
 import { ActivityIndicator, FlatList, Image, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { images } from '@/constants/images'
-import FoodCard from '@/components/foodCard'
+//import FoodCard from '@/components/foodCard'
 import useFetch from "@/services/useFetch";
 import { fetchFoods, login} from "@/services/api";
 import { icons } from '@/constants/icons'
 import SearchBar from '@/components/searchBar'
+import FoodCardSearch from '@/components/foodCardSearch';
 
 const Search = () => {
 
   const [searchQuery, setSearchQuery] = useState('');
 
-  const {data: foods, loading, error, refetch} = useFetch(() => fetchFoods({ query:  searchQuery }), false);
+  const {data: foods, loading, error, refetch: loadFoods, reset} = useFetch(() => fetchFoods({ query:  searchQuery }), false);
   useEffect(() => {
       async function doLogin() {
         await login('user1', 'weirdfishes');
-        await refetch();
+        await loadFoods();
         
       };
       doLogin();
     }, []);
 
+  useEffect(() =>{
+    const timeOutId = setTimeout(async () => {
+      if(searchQuery.trim()) {
+          await loadFoods();
+      } else {
+          reset();
+      }
+
+    },300);
+    
+    return () => clearTimeout(timeOutId);
+
+    }, [searchQuery]);
+
+
   return (
     <View className='flex-1 bg-primary'>
       <Image source={images.bg} className='flex-1 absolute w-full z-0' resizeMode='cover' />
       <FlatList data={foods} 
-                renderItem={ ({item}) => <FoodCard {...item}/>}
+                renderItem={ ({item}) => <FoodCardSearch {...item}/>}
                 keyExtractor={(item) => item.id.toString()} 
-                className='px-5'
-                numColumns={3}
-                columnWrapperStyle={{
-                  justifyContent: 'center',
-                  gap: 16,
-                  marginVertical: 16,
-                }}
+                className='px-3'
+                
                 contentContainerStyle={{ paddingBottom: 100}}
                 ListHeaderComponent={
                   <>
@@ -55,7 +66,11 @@ const Search = () => {
                       <Text className='text-accent'>{searchQuery}</Text></Text>
                        )}
                   </>
-                }/>
+                }
+                ListEmptyComponent={!loading && !error ? 
+                  (<View className='mt-10 px-5'>
+                      <Text className='text-center text-gray-500'>{searchQuery.trim() ? 'No Foods Found' : 'Search For a Food'}</Text>
+                    </View>) : null}/>
     </View>
   )
 }

@@ -55,6 +55,25 @@ export const fetchFoods = async ({ query } : { query : string}) => {
 }
 
 
+export const fetchLogs = async() => {
+  login('user1', 'weirdfishes');
+  const endpoint = `${TRACKER_CONFIG.BASE_URL}/caloriebalance/api/logs/`;
+  const response = await fetch(endpoint, {
+    method: 'GET',
+    headers: {
+      Accept: 'application/json',
+      Authorization: `Token ${tokenT}`,
+    }
+  })
+
+  if (!response.ok) {
+    //@ts-ignore
+      throw new Error('Failed to fetch logs', response.statusText);
+    }
+    const data = await response.json();
+    return data;
+
+}
 
 
 

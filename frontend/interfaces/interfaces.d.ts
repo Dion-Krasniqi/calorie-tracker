@@ -7,4 +7,11 @@ interface Food {
     carbohydrates: number;
     fats: number;
 
+};
+interface LoggedFood {
+    id: number;
+    food: Food;
+    quantity: number;
+    date_consumed: string;
+    calories_consumed: number;
 }
