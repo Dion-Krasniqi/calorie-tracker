@@ -2,9 +2,10 @@ import { View, Text } from 'react-native'
 import React from 'react'
 
 const FoodDetails = () => {
+   
   return (
     <View>
-      <Text>[id]</Text>
+      <Text className='text-black'>Penis</Text>
     </View>
   )
 }

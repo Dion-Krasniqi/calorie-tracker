@@ -4,12 +4,12 @@ import './globals.css';
 export default function RootLayout() {
   return <Stack>
     <Stack.Screen
-    name="(tabs)"
-    options={{ headerShown: false }}
+      name="(tabs)"
+      options={{ headerShown: false }}
     />
     <Stack.Screen
-    name="food/[id]"
-    options={{ headerShown: false }}
+      name="foods/[id]"
+      options={{ headerShown: false }}
     />
   </Stack>;
 }

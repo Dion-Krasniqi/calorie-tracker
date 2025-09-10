@@ -1,4 +1,6 @@
 let tokenT : string | '';
+
+
 export const TRACKER_CONFIG = {
     BASE_URL: 'http://192.168.1.9:8000',
     headers: { 
@@ -6,6 +8,8 @@ export const TRACKER_CONFIG = {
         Authorization: 'Token 3f6b77ee6254f7da1858be09aba7adae04fca629'
     },
 }
+
+
 
 export async function login(username: string, password: string) {
   const res = await fetch(`${TRACKER_CONFIG.BASE_URL}/account/login/`, {
@@ -27,6 +31,7 @@ export async function login(username: string, password: string) {
 
 
 export const fetchFoods = async ({ query } : { query : string}) => {
+  //Have to add brand here aswell
     const endpoint = query ? `${TRACKER_CONFIG.BASE_URL}/caloriebalance/api/foodsearch/?name=${encodeURIComponent(query)}`
     :`${TRACKER_CONFIG.BASE_URL}/caloriebalance/api/foodlist/`;
 

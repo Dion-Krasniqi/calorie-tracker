@@ -7,11 +7,14 @@ import { useRouter } from "expo-router";
 import useFetch from "@/services/useFetch";
 import { fetchFoods, login } from "@/services/api";
 import { useEffect } from "react";
+import FoodCard from "@/components/foodCard";
 
 
 
 export default function Index() {
+
   const {data: foods, loading: foodsLoading, error: foodsError, refetch} = useFetch(() => fetchFoods({ query:  '' }));
+  
   useEffect(() => {
     async function doLogin() {
       await login('user1', 'weirdfishes');
@@ -51,7 +54,7 @@ export default function Index() {
                   <>
                     <Text className="text-lg text-white font-bold mt-5 mb-3">Latest Foods</Text>
                     <FlatList data={foods} 
-                              renderItem={({item}) => (< Text className="text-white text-sm">{item.name}</Text>)}
+                              renderItem={({item}) => (<FoodCard {...item}/>)}
                               keyExtractor={(item) =>item.id.toString()}
                               numColumns={3}
                               columnWrapperStyle={{justifyContent:'flex-start', gap:20, paddingRight:5, marginBottom:10}}
