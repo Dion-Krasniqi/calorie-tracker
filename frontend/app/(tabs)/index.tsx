@@ -12,8 +12,9 @@ import FoodCard from "@/components/foodCard";
 
 
 export default function Index() {
+  const router = useRouter();
 
-  const {data: foods, loading: foodsLoading, error: foodsError, refetch} = useFetch(() => fetchFoods({ query:  '' }));
+  const {data: foods, loading: foodsLoading, error: foodsError, refetch} = useFetch(() => fetchFoods({ query:  '' }), false);
   
   useEffect(() => {
     async function doLogin() {
@@ -29,7 +30,7 @@ export default function Index() {
 
 
   
-  const router = useRouter();
+  
 
   
   return (
