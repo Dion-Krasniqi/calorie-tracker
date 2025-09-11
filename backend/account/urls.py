@@ -9,5 +9,7 @@ urlpatterns = [
 
     path('login/', views.LoginAPI_view.as_view(), name="login"),
     path('logout/', views.LogoutAPI_view.as_view(), name="logout"),
-    path('',views.HomeAPI_view.as_view(), name="profile")
+    path('',views.HomeAPI_view.as_view(), name="profile"),
+
+    path('api/profile/', views.ProfileAPI_view.as_view(), name='get-profile-api')
 ]

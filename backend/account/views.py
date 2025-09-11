@@ -68,3 +68,14 @@ class HomeAPI_view(generics.RetrieveUpdateAPIView):
      
      def get_object(self):
           return self.request.user
+
+class ProfileAPI_view(APIView):
+     authentication_classes = [TokenAuthentication]
+     permission_classes = [IsAuthenticated]
+     serializer_class = UserSerializer
+
+     def get(self, request):
+          data = {'username': self.request.user.username}
+          data['expenditure'] = self.request.user.expenditure if self.request.user.expenditure is not None else 0
+
+          return Response(data, status=status.HTTP_200_OK)
