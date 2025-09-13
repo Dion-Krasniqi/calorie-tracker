@@ -4,7 +4,7 @@ import { images } from "@/constants/images";
 import { ActivityIndicator, Button, Dimensions, FlatList, Image, ScrollView, ScrollViewBase, Text, TextInput, View } from "react-native";
 import { useRouter } from "expo-router";
 import useFetch from "@/services/useFetch";
-import { fetchFoods, fetchLogs, login, TRACKER_CONFIG } from "@/services/api";
+import { fetchFoods, fetchLogs, fetchProfile, TRACKER_CONFIG } from "@/services/api";
 import { useEffect, useState } from "react";
 import FoodCard from "@/components/foodCard";
 import LoggedFoodCard from "@/components/loggedFoodCard";
@@ -14,6 +14,7 @@ import * as SecureStore from 'expo-secure-store';
 
 export var loggedIn = false;
 
+
 export default function Index() {
   
 
@@ -22,6 +23,7 @@ export default function Index() {
 
   const [isLoading, setIsLoading] = useState(false);
   const {data: logsFood, loading:logsLoading, error:logsError, refetch} = useFetch(() =>fetchLogs(), false);
+  const {data: fetchedProfile, refetch: loadProfile} = useFetch( ()=> fetchProfile(), false);      
 
   const handleSubmit = async (e) => {
     console.log('pp')
