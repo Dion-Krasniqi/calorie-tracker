@@ -123,7 +123,7 @@ class LoggedFoodDetailAPI_view(generics.RetrieveUpdateDestroyAPIView): # Single 
 class LoggedFoodListAPI_view(generics.ListAPIView): # All logged foods
     queryset = LoggedFood.objects.all()
     serializer_class = LoggedFoodSerializer
-    authentication_classes = [TokenAuthentication]
+
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
@@ -133,11 +133,11 @@ class LoggedFoodListAPI_view(generics.ListAPIView): # All logged foods
 class FoodListAPI_view(generics.ListAPIView): # All foods in the database
     queryset = Food.objects.all()
     serializer_class = FoodSerializer
-    authentication_classes = [TokenAuthentication]
+
     permission_classes = [IsAuthenticated]
 
 class FoodSearchAPI_view(generics.ListAPIView):
-    authentication_classes = [TokenAuthentication]
+
     permission_classes = [IsAuthenticated]
     serializer_class = FoodSerializer
 
@@ -163,7 +163,7 @@ class FoodSearchAPI_view(generics.ListAPIView):
     
     
 class GetDailyIntakeAPI_view(APIView):
-    authentication_classes = [TokenAuthentication]
+
     permission_classes = [IsAuthenticated]
 
     def get(self,request):
@@ -202,7 +202,7 @@ class GetDailyIntakeAPI_view(APIView):
         
         
 class GetPeriodIntakeAPI_view(APIView):
-    authentication_classes = [TokenAuthentication]
+
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -260,7 +260,7 @@ class GetPeriodIntakeAPI_view(APIView):
         return Response(sorted(response_data,key =lambda x: x['date']), status=status.HTTP_200_OK)
 
 class GetRunningAverageAPI_view(APIView):
-    authentication_classes = [TokenAuthentication]
+    
     permission_classes = [IsAuthenticated]
 
     def get(self, request):

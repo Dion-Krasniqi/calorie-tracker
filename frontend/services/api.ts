@@ -1,3 +1,4 @@
+import * as SecureStore from 'expo-secure-store';
 let tokenT : string | '';
 
 
@@ -34,13 +35,13 @@ export const fetchFoods = async ({ query } : { query : string}) => {
   //Have to add brand here aswell
     const endpoint = query ? `${TRACKER_CONFIG.BASE_URL}/caloriebalance/api/foodsearch/?name=${encodeURIComponent(query)}`
     :`${TRACKER_CONFIG.BASE_URL}/caloriebalance/api/foodlist/`;
-
+    const token = await SecureStore.getItemAsync('accessToken');
     const response = await fetch(endpoint, {
         method:'GET',
         headers: {
             Accept: 'application/json',
             //@ts-ignore
-            Authorization: `Token ${tokenT}`,
+            Authorization: `Bearer ${token}`,
         },
     })
 
@@ -56,13 +57,13 @@ export const fetchFoods = async ({ query } : { query : string}) => {
 
 
 export const fetchLogs = async() => {
-  login('user1', 'weirdfishes');
   const endpoint = `${TRACKER_CONFIG.BASE_URL}/caloriebalance/api/logs/`;
+  const token = await SecureStore.getItemAsync('accessToken');
   const response = await fetch(endpoint, {
     method: 'GET',
     headers: {
       Accept: 'application/json',
-      Authorization: `Token ${tokenT}`,
+      Authorization: `Bearer ${token}`,
     }
   })
 
@@ -76,4 +77,49 @@ export const fetchLogs = async() => {
 }
 
 
+export const fetchFoodDetails = async (foodId: string) : Promise<FoodDetails> => {
+  try{
+    const endpoint = `${TRACKER_CONFIG.BASE_URL}/caloriebalance/api/logs/${foodId}/`
+    const response = await fetch(endpoint, {
+      method: 'GET',
+      headers: {
+      Accept: 'application/json',
+      Authorization: `Token ${tokenT}`,
+    }
 
+    }); 
+    if (!response.ok) {
+      throw new Error('Failed to fetch food detail');
+    }
+    const data = await response.json();
+    return data;
+
+  } catch (error){
+    console.log(error);
+    throw(error);
+  }
+}
+
+export const fetchProfile = async () => {
+  login('user1', 'weirdfishes');
+  try{
+    const endpoint = `${TRACKER_CONFIG.BASE_URL}/account/api/profile/`;
+    const response = await fetch(endpoint, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Token ${tokenT}`,
+      }
+    });
+    if (!response.ok){
+      throw new Error('Failed to fetch profile information');
+    }
+    const data = await response.json();
+    console.log('we got em');
+    return data;
+    
+  } catch (error) {
+    console.log(error);
+    throw(error);
+  }
+}

@@ -15,3 +15,8 @@ interface LoggedFood {
     date_consumed: string;
     calories_consumed: number;
 }
+
+interface ProfileInfo {
+    username: string;
+    expenditure: number;
+}

@@ -94,17 +94,9 @@ class LogoutAPI_view(generics.GenericAPIView):
 
 
 
-class HomeAPI_view(generics.RetrieveUpdateAPIView):
-     authentication_classes = [TokenAuthentication]
-     permission_classes = [IsAuthenticated]
-     queryset = User.objects.all()
-     serializer_class = UserSerializer
-     
-     def get_object(self):
-          return self.request.user
 
 class ProfileAPI_view(APIView):
-     authentication_classes = [TokenAuthentication]
+     
      permission_classes = [IsAuthenticated]
      serializer_class = UserSerializer
 

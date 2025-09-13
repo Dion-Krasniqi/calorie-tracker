@@ -8,19 +8,12 @@ import { icons } from '@/constants/icons'
 import SearchBar from '@/components/searchBar'
 import FoodCardSearch from '@/components/foodCardSearch';
 
+
 const Search = () => {
 
   const [searchQuery, setSearchQuery] = useState('');
 
   const {data: foods, loading, error, refetch: loadFoods, reset} = useFetch(() => fetchFoods({ query:  searchQuery }), false);
-  useEffect(() => {
-      async function doLogin() {
-        await login('user1', 'weirdfishes');
-        await loadFoods();
-        
-      };
-      doLogin();
-    }, []);
 
   useEffect(() =>{
     const timeOutId = setTimeout(async () => {

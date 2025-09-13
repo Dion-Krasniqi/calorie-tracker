@@ -4,16 +4,16 @@ import { useLocalSearchParams } from 'expo-router'
 import useFetch from '@/services/useFetch';
 import { fetchFoodDetails } from '@/services/api';
 
-const FoodDetails = () => {
+const LogDetails = () => {
 
   const { id } = useLocalSearchParams();
-  const { data: food, loading } = useFetch (() => fetchFoodDetails(id as string));
+  const { data: logs, loading } = useFetch (() => fetchFoodDetails(id as string));
    
   return (
     <View className='bg-primary flex-1'>
       <ScrollView contentContainerStyle={{paddingBottom:80}}>
         <View className='flex-col items-start justify-center mt-5 px-5'>
-          <Text className='text-white font-bold text-xl'>{food?.name}</Text>
+          <Text className='text-white font-bold text-xl'>{logs?.name}</Text>
         </View>
 
       </ScrollView>
@@ -21,4 +21,4 @@ const FoodDetails = () => {
   )
 }
 
-export default FoodDetails
+export default LogDetails
