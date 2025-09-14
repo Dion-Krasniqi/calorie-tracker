@@ -22,7 +22,7 @@ export default function Index() {
   const [password, setPassword ] = useState('');
 
   const [isLoading, setIsLoading] = useState(false);
-  const {data: logsFood, loading:logsLoading, error:logsError, refetch} = useFetch(() =>fetchLogs(), false);
+  const {data: logsFood, loading:logsLoading, error:logsError, refetch:loadLogs} = useFetch(() =>fetchLogs(), false);
   const {data: fetchedProfile, refetch: loadProfile} = useFetch( ()=> fetchProfile(), false);      
 
   const handleSubmit = async (e) => {
@@ -46,7 +46,7 @@ export default function Index() {
       await SecureStore.setItemAsync('accessToken', data.tokens.access);
       await SecureStore.setItemAsync('refreshToken', data.tokens.refresh);
       loggedIn = true;
-      await refetch();
+      await loadLogs();
       
       
     } catch (error){
@@ -56,6 +56,9 @@ export default function Index() {
     }
   }
   
+  
+  
+
   
   
   
@@ -77,13 +80,13 @@ export default function Index() {
             <Image source={icons.logo} className="w-12 h-10 mt-20 mb-5 mx-auto"/>
             {loggedIn? (<View>
               <Text className="text-white">123</Text>
-              <>
+              <SearchBar onPress={()=> router.push('./otherPages/search')} placeholder='Search for a food'/>
+              <>    
                     <Text className="text-lg text-white font-bold mt-5 mb-3">Latest Foods</Text>
                     <FlatList data={logsFood} 
                               renderItem={({item}) => (<LoggedFoodCard {...item}/>)}
                               keyExtractor={(item) =>item.id.toString()}
-                              numColumns={2}
-                              columnWrapperStyle={{justifyContent:'flex-start', gap:20, paddingRight:5, marginBottom:10}}
+                              /*columnWrapperStyle={{justifyContent:'flex-start', gap:20, paddingRight:5, marginBottom:10}}*/
                               className="mt-2 pb-32"
                               scrollEnabled={false}
                     />

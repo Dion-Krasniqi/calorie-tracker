@@ -13,7 +13,7 @@ const Profile = () => {
 
   useEffect(() => { loadProfile();
       
-    }, []);
+    }, [loggedIn]);
   
   
   return (

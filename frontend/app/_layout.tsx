@@ -8,6 +8,10 @@ export default function RootLayout() {
       options={{ headerShown: false }}
     />
     <Stack.Screen
+      name="otherPages"
+      options={{ title:'',headerShown: true, headerStyle:{backgroundColor: '#000000',}, headerTintColor: '#ab8bff',}}
+    />
+    <Stack.Screen
       name="foods/[id]"
       options={{ headerShown: true}}
     />

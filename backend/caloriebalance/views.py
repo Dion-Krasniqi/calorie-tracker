@@ -121,7 +121,7 @@ class LoggedFoodDetailAPI_view(generics.RetrieveUpdateDestroyAPIView): # Single 
     
     
 class LoggedFoodListAPI_view(generics.ListAPIView): # All logged foods
-    queryset = LoggedFood.objects.all()
+    queryset = LoggedFood.objects.all() #filter(date_consumed = date.today())
     serializer_class = LoggedFoodSerializer
 
     permission_classes = [IsAuthenticated]

@@ -3,13 +3,14 @@ import React, { useEffect, useState } from 'react'
 import { images } from '@/constants/images'
 //import FoodCard from '@/components/foodCard'
 import useFetch from "@/services/useFetch";
-import { fetchFoods, login} from "@/services/api";
+import { fetchFoods } from "@/services/api";
 import { icons } from '@/constants/icons'
 import SearchBar from '@/components/searchBar'
 import FoodCardSearch from '@/components/foodCardSearch';
 
 
 const Search = () => {
+  
 
   const [searchQuery, setSearchQuery] = useState('');
 
