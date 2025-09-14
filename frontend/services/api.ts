@@ -109,26 +109,26 @@ export const fetchProfile = async () => {
 }
 
 
-export const changeLog = async () => {
+/*export const changeLog = async (logId:string, newQuantity: string) => {
   try{
-    const endpoint = `${TRACKER_CONFIG.BASE_URL}/account/api/profile/`;
+    const endpoint = `${TRACKER_CONFIG.BASE_URL}/caloriebalance/api/logs/${logId}/`;
     const token = await SecureStore.getItemAsync('accessToken');
     const response = await fetch(endpoint, {
-      method: 'GET',
+      method: 'PATCH',
       headers: {
+        'Content-Type': 'application/json',
         Accept: 'application/json',
         Authorization: `Bearer ${token}`,
-      }
+      },
+      body: JSON.stringify({quantity: newQuantity}),
     });
     if (!response.ok){
       throw new Error('Failed to fetch profile information');
     }
-    const data = await response.json();
-    console.log('we got em');
-    return data;
+    return response;
     
   } catch (error) {
     console.log(error);
     throw(error);
   }
-}
+}*/

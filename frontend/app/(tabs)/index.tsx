@@ -80,7 +80,7 @@ export default function Index() {
             <Image source={icons.logo} className="w-12 h-10 mt-20 mb-5 mx-auto"/>
             {loggedIn? (<View>
               <Text className="text-white">123</Text>
-              <SearchBar onPress={()=> router.push('./otherPages/search')} placeholder='Search for a food'/>
+              <SearchBar onPress={()=> router.push('/otherPages/search')} placeholder='Search for a food'/>
               <>    
                     <Text className="text-lg text-white font-bold mt-5 mb-3">Latest Foods</Text>
                     <FlatList data={logsFood} 

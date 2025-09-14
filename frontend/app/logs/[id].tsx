@@ -1,15 +1,16 @@
-import { View, Text, ScrollView, TextInput } from 'react-native'
+import { View, Text, ScrollView, TextInput, Button } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { useLocalSearchParams } from 'expo-router'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 import useFetch from '@/services/useFetch';
-import { changeLog, fetchLogDetails } from '@/services/api';
+import { changeLog, fetchLogDetails, TRACKER_CONFIG } from '@/services/api';
+import * as SecureStore from 'expo-secure-store';
 
 
 const LogDetails = () => {
 
   const { id } = useLocalSearchParams();
   const { data: log, loading, refetch } = useFetch (() => fetchLogDetails(id as string));
-  const [quantity, setQuantity] = useState(log? log.quantity:0);
+  const [quantity, setQuantity] = useState(log? String(log.quantity):'');
   const [isLoading, setLoading] = useState(false);
    
   useEffect(() =>{
@@ -17,29 +18,35 @@ const LogDetails = () => {
   
       }, []);
 
-
+      const router = useRouter();
 
   const handleSubmit = async (e) => {
-      console.log('pp')
       e.preventDefault();
       if (isLoading) {
         return
       }
       setLoading(true);
-      try {
-        const response = await changeLog();
-      
-      if(!response.ok) {
-        throw new Error(e);
-      }
-        const data = await response.json()
-        
-        
-        
-        
+      try { //@ts-ignore
+            const endpoint = `${TRACKER_CONFIG.BASE_URL}/caloriebalance/api/logs/${log.id}/`;
+            const token = await SecureStore.getItemAsync('accessToken');
+            const response = await fetch(endpoint, {
+              method: 'PATCH',
+              headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify({quantity: quantity}),
+            });
+            if (!response.ok){
+              throw new Error('Failed to update quantity');
+            }
+            
+          
       } catch (error){
         
       } finally {
+        router.push('/');
         setLoading(false);
       }
     }
@@ -52,8 +59,9 @@ const LogDetails = () => {
           <Text className='text-white font-bold text-xl'>{log?.food.name}</Text>
           <Text className='text-white font-bold text-xl'>{log?.calories_consumed}</Text>
          <View className='py-1 w-[100%]' style={{flexDirection:'row', alignItems:'center', justifyContent:'flex-start'}}>
-          <TextInput className='text-white' keyboardType='numeric' placeholder={String(log?.quantity)} placeholderTextColor={'#ab8bff'}/>
+          <TextInput className='text-white' value={quantity} onChangeText={setQuantity} keyboardType='numeric' placeholder={String(log?.quantity)} placeholderTextColor={'#ab8bff'}/>
           <Text className='text-white'>Grams</Text>
+          <Button title="submit" onPress={handleSubmit} />
          </View>
         </View>
         
