@@ -105,7 +105,6 @@ class LogFoodAPI_view(generics.CreateAPIView): # Logging food
 
 class LoggedFoodDetailAPI_view(generics.RetrieveUpdateDestroyAPIView): # Single logged food editing
     serializer_class = LoggedFoodSerializer
-    authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):

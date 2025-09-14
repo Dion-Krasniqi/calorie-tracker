@@ -13,7 +13,7 @@ const FoodDetails = () => {
     <View className='bg-primary flex-1'>
       <ScrollView contentContainerStyle={{paddingBottom:80}}>
         <View className='flex-col items-start justify-center mt-5 px-5'>
-          <Text className='text-white font-bold text-xl'>{food?.name}</Text>
+          <Text className='text-white font-bold text-xl'>pp</Text>
         </View>
 
       </ScrollView>

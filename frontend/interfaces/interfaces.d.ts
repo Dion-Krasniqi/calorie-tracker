@@ -20,3 +20,11 @@ interface ProfileInfo {
     username: string;
     expenditure: number;
 }
+
+interface LogDetails {
+    id: number;
+    food: Food;
+    quantity: number;
+    date_consumed: string;
+    calories_consumed: number;
+}

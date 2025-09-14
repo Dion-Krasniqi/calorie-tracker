@@ -61,20 +61,19 @@ export const fetchLogs = async() => {
 }
 
 
-export const fetchFoodDetails = async (foodId: string) : Promise<FoodDetails> => {
+export const fetchLogDetails = async (logId: string) : Promise<LogDetails> => {
   try{
-    const endpoint = `${TRACKER_CONFIG.BASE_URL}/caloriebalance/api/logs/${foodId}/`;
+    const endpoint = `${TRACKER_CONFIG.BASE_URL}/caloriebalance/api/logs/${logId}/`;
     const token = await SecureStore.getItemAsync('accessToken');
     const response = await fetch(endpoint, {
       method: 'GET',
       headers: {
-                  Accept: 'application/json',
-                  Authorization: `Bearer ${token}`,
-    }
-
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      }
     }); 
     if (!response.ok) {
-      throw new Error('Failed to fetch food detail');
+      throw new Error('Failed to fetch log details');
     }
     const data = await response.json();
     return data;
@@ -86,6 +85,31 @@ export const fetchFoodDetails = async (foodId: string) : Promise<FoodDetails> =>
 }
 
 export const fetchProfile = async () => {
+  try{
+    const endpoint = `${TRACKER_CONFIG.BASE_URL}/account/api/profile/`;
+    const token = await SecureStore.getItemAsync('accessToken');
+    const response = await fetch(endpoint, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      }
+    });
+    if (!response.ok){
+      throw new Error('Failed to fetch profile information');
+    }
+    const data = await response.json();
+    console.log('we got em');
+    return data;
+    
+  } catch (error) {
+    console.log(error);
+    throw(error);
+  }
+}
+
+
+export const changeLog = async () => {
   try{
     const endpoint = `${TRACKER_CONFIG.BASE_URL}/account/api/profile/`;
     const token = await SecureStore.getItemAsync('accessToken');
