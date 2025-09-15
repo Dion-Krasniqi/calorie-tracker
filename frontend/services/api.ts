@@ -39,9 +39,9 @@ export const fetchFoods = async ({ query } : { query : string}) => {
 
 }
 
-export const fetchFoodDetails = async (logId: string) : Promise<Food> => {
+export const fetchFoodDetails = async (foodId: string) : Promise<Food> => {
   try{
-    const endpoint = `${TRACKER_CONFIG.BASE_URL}/caloriebalance/api/logs/${logId}/`;
+    const endpoint = `${TRACKER_CONFIG.BASE_URL}/caloriebalance/api/fooddetail/${foodId}`;
     const token = await SecureStore.getItemAsync('accessToken');
     const response = await fetch(endpoint, {
       method: 'GET',

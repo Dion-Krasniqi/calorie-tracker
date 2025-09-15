@@ -17,79 +17,19 @@ from .serializers import LoggedFoodSerializer, FoodSerializer
 
 
 # Create your views here.
-@login_required
-def view_dashboard(request):
-    user = request.user
-    intake_dict = LoggedFood.objects.filter(user=request.user,date_consumed=date.today()).select_related('food').aggregate(total=Sum('calories_consumed'))
-    if intake_dict.get('total') is None:
-        intake_today = 0
-    else:
-        intake_today = intake_dict.get('total')
-    template_parameters = {'intake_today':intake_today,}
-
-    if user.expenditure is not None:
-        if user.expenditure!=0.00:
-            balance_today = user.expenditure - intake_today
-            template_parameters['balance_today'] = balance_today
-        
-    return render(request, 'caloriebalance/dashboard.html',template_parameters)
-
-
-class DashboardAPI_view(APIView):
-    permission_classes = [IsAuthenticated]
-    authentication_classes = [TokenAuthentication]
-    def get(self, request):
-        return Response({"message":f"Welcome {request.user.username}!"})
 
 
 
-
-@login_required
-def log_food_view(request):
-    if request.method == 'POST':
-        form = LoggedFoodForm(request.POST)
-        if form.is_valid():
-            logged_food = form.save(commit=False)
-            logged_food.user = request.user
-
-            logged_food.calories_consumed = (logged_food.quantity/100)*logged_food.food.calories
-            logged_food.save()
-            return redirect('/')
-    else:
-        form = LoggedFoodForm(initial={'date_consumed':date.today()})
-
-    foods = Food.objects.all().order_by('name')
-    return render(request, 'caloriebalance/log_food.html',{'form':form, 'foods':foods})
-
-@login_required
-def delete_logged_food(request, logged_food_id):
-    logged_food = get_object_or_404(LoggedFood, id=logged_food_id)
-    if logged_food.user==request.user or request.user.is_staff:
-        logged_food.delete()
-    return redirect('view_logs')
-
-
-
-@login_required
-def see_logs_view(request):
-    all_logs = LoggedFood.objects.filter(user=request.user).select_related('food').order_by(F('date_consumed').desc())
-
-    daily_logs = {}
-    for log in all_logs:
-        date_key = log.date_consumed
-        if date_key not in daily_logs:
-            daily_logs[date_key]=[]
-        daily_logs[date_key].append(log)
-    return render(request, 'caloriebalance/view_logs.html', {'daily_logs':daily_logs})
     
 class LogFoodAPI_view(generics.CreateAPIView): # Logging food
-    queryset = LoggedFood.objects.all()
+    queryset = Food.objects.all()
     serializer_class = LoggedFoodSerializer
     permission_classes = [IsAuthenticated]
     
     def perform_create(self, serializer):
         food_instance = serializer.validated_data.get('food')
         quantity = serializer.validated_data.get('quantity')
+        print(food_instance)
 
         calories_consumed = (quantity/100) * food_instance.calories
 
@@ -142,7 +82,6 @@ class FoodSearchAPI_view(generics.ListAPIView):
     def get(self, request, *args, **kwargs):
         food_name = request.query_params.get('name', None)
         food_brand = request.query_params.get('brand', None)
-
         if food_name is None and food_brand is None:
             return Response({"error":"You must enter the name or brand of the food"}, status=status.HTTP_400_BAD_REQUEST) 
 
@@ -158,6 +97,14 @@ class FoodSearchAPI_view(generics.ListAPIView):
         if food_brand:
             queryset = queryset.filter(brand__icontains=food_brand)   
         return queryset
+    
+    
+class FoodDetailAPI_view(generics.RetrieveAPIView): # Single food detail
+    serializer_class = FoodSerializer
+    permission_classes = [IsAuthenticated]
+    queryset = Food.objects.all()
+    
+    
     
     
 class GetDailyIntakeAPI_view(APIView):

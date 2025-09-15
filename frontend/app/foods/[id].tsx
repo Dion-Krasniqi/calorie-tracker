@@ -1,5 +1,5 @@
 import { View, Text, ScrollView, TextInput, Button } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import useFetch from '@/services/useFetch';
 import { fetchFoodDetails, TRACKER_CONFIG } from '@/services/api';
@@ -9,9 +9,14 @@ const FoodDetails = () => {
 
   const router = useRouter();
   const { id } = useLocalSearchParams();
-  const { data: food, loading } = useFetch (() => fetchFoodDetails(id as string));
+  const { data: food, loading, refetch } = useFetch (() => fetchFoodDetails(id as string));
   const [quantity, setQuantity] = useState('100');
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() =>{
+        refetch();
+    
+        }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,6 +27,7 @@ const FoodDetails = () => {
       setIsLoading(true);
       const endpoint = `${TRACKER_CONFIG.BASE_URL}/caloriebalance/api/add/`;
       const token = await SecureStore.getItemAsync('accessToken');
+      console.log(id)
       const response = await fetch(endpoint,{
         method: 'POST',
         headers: {
@@ -51,12 +57,13 @@ const FoodDetails = () => {
         
           {food ? (<View className='flex-col items-start justify-center mt-5 px-5'>
                       <Text className='text-white font-bold text-xl'>{food.name}</Text>
-                      <TextInput className='background-color-white' 
+                      <TextInput className='text-white' 
                                  value={quantity} 
-                                 onChange={setQuantity} 
+                                 onChangeText={setQuantity} 
                                  keyboardType='numeric'
                                  placeholder={quantity}
                                  placeholderTextColor={'#ab8bff'}/>
+                        <Text className='text-white font-bold text-'>{Math.round(food.calories*parseFloat(quantity))/100}calories</Text>
                       <Button title='Add' onPress={handleSubmit}/>
                    </View>
                   
