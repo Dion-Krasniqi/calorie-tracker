@@ -16,6 +16,10 @@ const Search = () => {
 
   const {data: foods, loading, error, refetch: loadFoods, reset} = useFetch(() => fetchFoods({ query:  searchQuery }), false);
 
+  useEffect(() => {
+        loadFoods();
+    }, []);
+
   useEffect(() =>{
     const timeOutId = setTimeout(async () => {
       if(searchQuery.trim()) {
@@ -61,7 +65,7 @@ const Search = () => {
                        )}
                   </>
                 }
-                ListEmptyComponent={!loading && !error ? 
+                ListEmptyComponent={!loading && !error && foods?.length == 0 ? 
                   (<View className='mt-10 px-5'>
                       <Text className='text-center text-gray-500'>{searchQuery.trim() ? 'No Foods Found' : 'Search For a Food'}</Text>
                     </View>) : null}/>

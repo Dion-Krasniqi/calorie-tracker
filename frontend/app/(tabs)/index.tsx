@@ -55,15 +55,15 @@ export default function Index() {
       setIsLoading(false);
     }
   }
-  
-  
+
+  const updateView = () => {
+      loadLogs();
+  }
   
 
-  
-  
-  
-  
-
+  useEffect(() =>{
+    loadLogs();
+  })
 
 
 
@@ -84,7 +84,7 @@ export default function Index() {
               <>    
                     <Text className="text-lg text-white font-bold mt-5 mb-3">Latest Foods</Text>
                     <FlatList data={logsFood} 
-                              renderItem={({item}) => (<LoggedFoodCard {...item}/>)}
+                              renderItem={({item}) => (<LoggedFoodCard {...item} updateView={updateView}/>)}
                               keyExtractor={(item) =>item.id.toString()}
                               /*columnWrapperStyle={{justifyContent:'flex-start', gap:20, paddingRight:5, marginBottom:10}}*/
                               className="mt-2 pb-32"

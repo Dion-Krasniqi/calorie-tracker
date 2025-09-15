@@ -1,11 +1,40 @@
-import { View, Text, FlatList, TouchableOpacity } from 'react-native'
+import { View, Text, FlatList, TouchableOpacity, Button } from 'react-native'
 import React from 'react'
 import FoodCard from './foodCard'
 import { Link } from 'expo-router'
+import * as SecureStore from 'expo-secure-store';
+import { TRACKER_CONFIG } from '@/services/api';
 
-const LoggedFoodCard = ({id, food, quantity, date_consumed, calories_consumed}: LoggedFood) => {
+
+
+//@ts-ignore
+const LoggedFoodCard = ({id, food, quantity, date_consumed, calories_consumed, updateView}) => {
+  const handleDelete = async (id) => {
+      
+      
+      try { //@ts-ignore
+            const endpoint = `${TRACKER_CONFIG.BASE_URL}/caloriebalance/api/logs/${id}/`;
+            const token = await SecureStore.getItemAsync('accessToken');
+            const response = await fetch(endpoint, {
+              method: 'DELETE',
+              headers: {
+                Authorization: `Bearer ${token}`,
+              }
+            });
+            if (!response.ok){
+              throw new Error('Failed to update quantity');
+            }
+            updateView();
+          
+      } catch (error){
+        console.log(error);
+      } finally {
+        
+      }
+    }
+
   return (
-    
+    <View>
       <Link href={`/logs/${id}`} asChild>
         <TouchableOpacity className='w-[95%]'>
             <View>
@@ -21,6 +50,8 @@ const LoggedFoodCard = ({id, food, quantity, date_consumed, calories_consumed}: 
               
         </TouchableOpacity>
       </Link>
+      <Button title='d' onPress={()=>handleDelete(id)}/ >
+    </View>
     
   )
 }
