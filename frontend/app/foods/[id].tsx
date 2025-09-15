@@ -1,22 +1,73 @@
-import { View, Text, ScrollView } from 'react-native'
-import React from 'react'
-import { useLocalSearchParams } from 'expo-router'
+import { View, Text, ScrollView, TextInput, Button } from 'react-native'
+import React, { useState } from 'react'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 import useFetch from '@/services/useFetch';
-import { fetchFoodDetails } from '@/services/api';
+import { fetchFoodDetails, TRACKER_CONFIG } from '@/services/api';
+import * as SecureStore from 'expo-secure-store';
 
 const FoodDetails = () => {
 
+  const router = useRouter();
   const { id } = useLocalSearchParams();
   const { data: food, loading } = useFetch (() => fetchFoodDetails(id as string));
+  const [quantity, setQuantity] = useState('100');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if(isLoading){
+      return
+    }
+    try {
+      setIsLoading(true);
+      const endpoint = `${TRACKER_CONFIG.BASE_URL}/caloriebalance/api/add/`;
+      const token = await SecureStore.getItemAsync('accessToken');
+      const response = await fetch(endpoint,{
+        method: 'POST',
+        headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                Authorization: `Bearer ${token}`,
+              },
+        body: JSON.stringify({food:id, quantity: quantity})
+      })
+      if (!response.ok){
+        throw new Error('Failed to add food');
+      }
+        
+    }catch (error) {
+      throw (error)
+    } finally {
+      setIsLoading(false);
+      router.push('/');
+    }
+  }
+
+
+
    
   return (
     <View className='bg-primary flex-1'>
-      <ScrollView contentContainerStyle={{paddingBottom:80}}>
-        <View className='flex-col items-start justify-center mt-5 px-5'>
-          <Text className='text-white font-bold text-xl'>pp</Text>
-        </View>
+        
+          {food ? (<View className='flex-col items-start justify-center mt-5 px-5'>
+                      <Text className='text-white font-bold text-xl'>{food.name}</Text>
+                      <TextInput className='background-color-white' 
+                                 value={quantity} 
+                                 onChange={setQuantity} 
+                                 keyboardType='numeric'
+                                 placeholder={quantity}
+                                 placeholderTextColor={'#ab8bff'}/>
+                      <Button title='Add' onPress={handleSubmit}/>
+                   </View>
+                  
+                  
+                  )
+          :(<Text className='text-white font-bold text-xl'>Unknown</Text>)}
+          
 
-      </ScrollView>
+        
+
+      
     </View>
   )
 }

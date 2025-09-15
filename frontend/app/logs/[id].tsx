@@ -2,7 +2,7 @@ import { View, Text, ScrollView, TextInput, Button } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import useFetch from '@/services/useFetch';
-import { changeLog, fetchLogDetails, TRACKER_CONFIG } from '@/services/api';
+import { fetchLogDetails, TRACKER_CONFIG } from '@/services/api';
 import * as SecureStore from 'expo-secure-store';
 
 
@@ -18,7 +18,7 @@ const LogDetails = () => {
   
       }, []);
 
-      const router = useRouter();
+  const router = useRouter();
 
   const handleSubmit = async (e) => {
       e.preventDefault();
@@ -46,8 +46,9 @@ const LogDetails = () => {
       } catch (error){
         
       } finally {
-        router.push('/');
         setLoading(false);
+        router.push('/');
+        
       }
     }
 

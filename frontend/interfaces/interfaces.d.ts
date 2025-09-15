@@ -21,10 +21,10 @@ interface ProfileInfo {
     expenditure: number;
 }
 
-interface LogDetails {
+/*interface LogDetails {
     id: number;
     food: Food;
     quantity: number;
     date_consumed: string;
     calories_consumed: number;
-}
+}*/

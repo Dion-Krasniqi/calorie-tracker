@@ -85,7 +85,6 @@ def see_logs_view(request):
 class LogFoodAPI_view(generics.CreateAPIView): # Logging food
     queryset = LoggedFood.objects.all()
     serializer_class = LoggedFoodSerializer
-    authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     
     def perform_create(self, serializer):

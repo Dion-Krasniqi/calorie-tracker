@@ -39,6 +39,29 @@ export const fetchFoods = async ({ query } : { query : string}) => {
 
 }
 
+export const fetchFoodDetails = async (logId: string) : Promise<Food> => {
+  try{
+    const endpoint = `${TRACKER_CONFIG.BASE_URL}/caloriebalance/api/logs/${logId}/`;
+    const token = await SecureStore.getItemAsync('accessToken');
+    const response = await fetch(endpoint, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      }
+    }); 
+    if (!response.ok) {
+      throw new Error('Failed to fetch log details');
+    }
+    const data = await response.json();
+    return data;
+
+  } catch (error){
+    console.log(error);
+    throw(error);
+  }
+}
+
 
 export const fetchLogs = async() => {
   const endpoint = `${TRACKER_CONFIG.BASE_URL}/caloriebalance/api/logs/`;
@@ -61,7 +84,7 @@ export const fetchLogs = async() => {
 }
 
 
-export const fetchLogDetails = async (logId: string) : Promise<LogDetails> => {
+export const fetchLogDetails = async (logId: string) : Promise<LoggedFood> => {
   try{
     const endpoint = `${TRACKER_CONFIG.BASE_URL}/caloriebalance/api/logs/${logId}/`;
     const token = await SecureStore.getItemAsync('accessToken');
