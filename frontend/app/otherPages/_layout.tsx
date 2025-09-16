@@ -7,15 +7,14 @@ import { Tabs } from 'expo-router'
 
 const _layout = () => {
   return (
-    <Tabs>
-        
+       <Tabs>
         <Tabs.Screen
             name="search"
             options={{title:'search',headerShown:false, tabBarStyle:{display:'none'} }}
         />
+       </Tabs>  
         
-        
-    </Tabs>
+    
   )
 }
 

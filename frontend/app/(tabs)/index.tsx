@@ -2,13 +2,14 @@ import SearchBar from "@/components/searchBar";
 import { icons } from "@/constants/icons";
 import { images } from "@/constants/images";
 import { ActivityIndicator, Button, Dimensions, FlatList, Image, ScrollView, ScrollViewBase, Text, TextInput, View } from "react-native";
-import { useRouter } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import useFetch from "@/services/useFetch";
 import { fetchFoods, fetchLogs, fetchProfile, TRACKER_CONFIG } from "@/services/api";
 import { useEffect, useState } from "react";
 import FoodCard from "@/components/foodCard";
 import LoggedFoodCard from "@/components/loggedFoodCard";
 import * as SecureStore from 'expo-secure-store';
+import AddEntry from "@/components/addEntry";
 
 
 
@@ -45,8 +46,14 @@ export default function Index() {
         contentContainerStyle={{ minHeight:'100%', paddingBottom:10}}>
 
             <Image source={icons.logo} className="w-12 h-10 mt-20 mb-5 mx-auto"/>
+            
             <View style={{alignItems:'center'}}>
-              <SearchBar onPress={()=> router.push('/otherPages/search')} placeholder='Search for a food'/>
+              <Text className="text-white text-9xl">DATA</Text>
+              <View className='w-[75%] mt-12' style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between',}}>
+                <AddEntry buttonText="Add Food" link='/otherPages/search/'/>
+                <AddEntry buttonText="Quick Track" link='/otherPages/search/'/>
+              </View>
+              
               <>    
                     <Text className="text-lg text-white font-bold mt-5 mb-3">Latest Foods</Text>
                     <FlatList data={logsFood} 

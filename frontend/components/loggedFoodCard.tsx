@@ -9,7 +9,7 @@ import { TRACKER_CONFIG } from '@/services/api';
 
 //@ts-ignore
 const LoggedFoodCard = ({id, food, quantity, date_consumed, calories_consumed, updateView}) => {
-  const handleDelete = async (id) => {
+  const handleDelete = async (id:string) => {
       
       
       try { //@ts-ignore

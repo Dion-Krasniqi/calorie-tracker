@@ -25,14 +25,14 @@ const Search = () => {
       if(searchQuery.trim()) {
           await loadFoods();
       } else {
-          reset();
+          
       }
 
-    },300);
+    },500);
     
     return () => clearTimeout(timeOutId);
 
-    }, [searchQuery]);
+    }, [searchQuery])
 
 
   return (
