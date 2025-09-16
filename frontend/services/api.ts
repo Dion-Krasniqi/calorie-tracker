@@ -1,7 +1,5 @@
+import { loggedIn } from '@/app/(tabs)';
 import * as SecureStore from 'expo-secure-store';
-
-
- 
 
 
 export const TRACKER_CONFIG = {
@@ -11,6 +9,47 @@ export const TRACKER_CONFIG = {
         Authorization: `Bearer ${getSecureItem()}`
     },*/
 }
+
+export const fetchWithAuth = async <T>(endpoint: string, json_options?: RequestInit): Promise<T> => {
+
+  const token = await SecureStore.getItemAsync('accessToken');
+  const options : RequestInit = {...json_options,
+    headers: {...(json_options?.headers || {}),
+    Authorization: `Bearer ${token}`,
+    Accept: 'application/json',
+  },
+
+  };
+  const response = await fetch(endpoint, options);
+  if (!response.ok) {
+    if(response.status == 401) {
+      try {
+        const refreshToken = await SecureStore.getItemAsync('refreshToken');
+        const tokenResponse = await fetch(`${TRACKER_CONFIG.BASE_URL}/api/token/refresh/`, {
+        method:'POST',
+        headers: {Accept: 'application/json'},
+        body: JSON.stringify({refresh:refreshToken}),
+    })
+        const newData = await tokenResponse.json()
+        await SecureStore.setItemAsync('accessToken', newData.access);
+        await SecureStore.setItemAsync('refreshToken', newData.refresh || refreshToken) ;
+        return fetchWithAuth(endpoint, json_options);
+      } catch (error) {
+        await SecureStore.setItemAsync('accessToken', '');
+        await SecureStore.setItemAsync('refreshToken', '') ;
+        //logout
+        throw (error)
+    } 
+    } 
+
+  }
+  const data: T = await response.json();
+  return data
+}
+ 
+
+
+
 
 
 
