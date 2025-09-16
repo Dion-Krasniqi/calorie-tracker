@@ -5,9 +5,20 @@ import { images } from '@/constants/images'
 import { fetchProfile} from '@/services/api'
 import { useEffect } from 'react';
 import { loggedIn } from '.';
+import * as SecureStore from 'expo-secure-store';
+import { useRouter } from 'expo-router';
 
 
 const Profile = () => {
+  
+  const router = useRouter();
+
+  const handleLogOut = async () => {
+    await SecureStore.setItemAsync('accessToken', '');
+    await SecureStore.setItemAsync('refreshToken', '');
+    router.replace('/login');
+
+  }
 
   const {data: ProfileInfo, refetch: loadProfile} = useFetch( ()=> fetchProfile(), false);
 
@@ -35,6 +46,8 @@ const Profile = () => {
         
         <TouchableOpacity ><Text className='text-white text-xl mt-20'>Change Calorie Goal
           {loggedIn ? (<Text className="text-white">123</Text>):(<Text>321</Text>)}</Text></TouchableOpacity>   
+
+        <Button title='Log Out' onPress={handleLogOut}/>
 
       </View>
       

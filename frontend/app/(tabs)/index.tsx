@@ -17,69 +17,35 @@ export var loggedIn = false;
 
 export default function Index() {
   
+  const router = useRouter();
 
-  const [username, setUsername ] = useState('');
-  const [password, setPassword ] = useState('');
-
-  const [isLoading, setIsLoading] = useState(false);
   const {data: logsFood, loading:logsLoading, error:logsError, refetch:loadLogs} = useFetch(() =>fetchLogs(), false);
   const {data: fetchedProfile, refetch: loadProfile} = useFetch( ()=> fetchProfile(), false);      
 
-  const handleSubmit = async (e) => {
-    console.log('pp')
-    e.preventDefault();
-    if (isLoading) {
-      return
-    }
-    setIsLoading(true);
-    try {
-      const response = await fetch('http://192.168.1.9:8000/account/login/', {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({username: username, password: password}),});
-    
-    if(!response.ok) {
-      throw new Error(e);
-    }
-      const data = await response.json()
-      console.log(data.tokens.access);
-      await SecureStore.setItemAsync('accessToken', data.tokens.access);
-      await SecureStore.setItemAsync('refreshToken', data.tokens.refresh);
-      loggedIn = true;
-      await loadLogs();
-      
-      
-    } catch (error){
-      
-    } finally {
-      setIsLoading(false);
-    }
-  }
 
   const updateView = () => {
       loadLogs();
   }
   
 
-  useEffect(() =>{
-    /*loadLogs();*/
-  })
+  
+  useEffect(()=>{
+    loadLogs();
+  }, [])
 
 
 
-
-  const router = useRouter();
+  
 
   return (
     
-    <View className="flex-1 bg-primary">
+    <View className="flex-1 bg-primary" >
         <Image source={images.bg} className="absolute w-full z-0"/>
         <ScrollView className="flex-1 px-5" showsVerticalScrollIndicator={false} 
         contentContainerStyle={{ minHeight:'100%', paddingBottom:10}}>
 
             <Image source={icons.logo} className="w-12 h-10 mt-20 mb-5 mx-auto"/>
-            {loggedIn? (<View>
-              <Text className="text-white">123</Text>
+            <View style={{alignItems:'center'}}>
               <SearchBar onPress={()=> router.push('/otherPages/search')} placeholder='Search for a food'/>
               <>    
                     <Text className="text-lg text-white font-bold mt-5 mb-3">Latest Foods</Text>
@@ -90,23 +56,9 @@ export default function Index() {
                               className="mt-2 pb-32"
                               scrollEnabled={false}
                     />
-                    {logsFood && <Text className="text-white">{logsFood.length}</Text>}
                   </>
             
-            
-            
-            
-              </View>):(
-              <View>
-                <TextInput value={username} onChangeText={setUsername} className="flex-1 ml-2 text-white" placeholder="user"
-                placeholderTextColor={'#ab8bff'}/>
-                <TextInput value={password} onChangeText={setPassword} className="flex-1 ml-2 text-white" placeholder="pass"
-                placeholderTextColor={'#ab8bff'}/>
-                <Button title="submit" onPress={handleSubmit} />
               </View>
-              )}
-            
-
         </ScrollView>
 
 

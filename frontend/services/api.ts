@@ -12,6 +12,7 @@ export const TRACKER_CONFIG = {
 
 export const fetchWithAuth = async <T>(endpoint: string, json_options?: RequestInit): Promise<T> => {
 
+  endpoint = `${TRACKER_CONFIG.BASE_URL}/${endpoint}`
   const token = await SecureStore.getItemAsync('accessToken');
   const options : RequestInit = {...json_options,
     headers: {...(json_options?.headers || {}),
@@ -33,7 +34,7 @@ export const fetchWithAuth = async <T>(endpoint: string, json_options?: RequestI
         const newData = await tokenResponse.json()
         await SecureStore.setItemAsync('accessToken', newData.access);
         await SecureStore.setItemAsync('refreshToken', newData.refresh || refreshToken) ;
-        return fetchWithAuth(endpoint, json_options);
+        return fetchWithAuth<T>(endpoint, json_options);
       } catch (error) {
         await SecureStore.setItemAsync('accessToken', '');
         await SecureStore.setItemAsync('refreshToken', '') ;

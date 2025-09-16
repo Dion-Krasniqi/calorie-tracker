@@ -21,6 +21,11 @@ interface ProfileInfo {
     expenditure: number;
 }
 
+interface LoginResponse {
+    access: string;
+    refresh: string;
+}
+
 /*interface LogDetails {
     id: number;
     food: Food;
