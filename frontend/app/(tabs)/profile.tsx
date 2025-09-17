@@ -1,9 +1,9 @@
-import { View, Text, Image, Button, TouchableOpacity } from 'react-native'
+import { View, Text, Image, Button, TouchableOpacity, TextInput } from 'react-native'
 import useFetch from "@/services/useFetch";
 import { icons } from '@/constants/icons'
 import { images } from '@/constants/images'
-import { fetchProfile} from '@/services/api'
-import { useEffect } from 'react';
+import { fetchProfile, fetchWithAuth} from '@/services/api'
+import { useEffect, useState } from 'react';
 import { loggedIn } from '.';
 import * as SecureStore from 'expo-secure-store';
 import { useRouter } from 'expo-router';
@@ -14,13 +14,36 @@ const Profile = () => {
   const router = useRouter();
 
   const handleLogOut = async () => {
+    const endpoint = '/account/logout/';
+    const token = await SecureStore.getItemAsync('token');
+    const refreshToken = await SecureStore.getItemAsync('refreshToken');
     await SecureStore.setItemAsync('accessToken', '');
     await SecureStore.setItemAsync('refreshToken', '');
+    const options = {method : 'POST',headers: {'Content-Type': 'application/json',
+                                               Authorization: `Bearer ${token}`,
+                                               Accept: 'application/json',
+    }, body: JSON.stringify({refresh:refreshToken})};
+    await fetch(endpoint, options);
     router.replace('/login');
 
   }
 
   const {data: ProfileInfo, refetch: loadProfile} = useFetch( ()=> fetchProfile(), false);
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [expenditure, setExpenditure] = useState(`${ProfileInfo?.expenditure}` || '0');
+
+  const handleChangeExpenditure = async () => {
+    if(isEditing) {
+      return;
+    }
+    try {
+      
+    } catch{
+
+    }
+
+  }
 
   useEffect(() => { loadProfile();
       
@@ -37,15 +60,20 @@ const Profile = () => {
         {ProfileInfo && 
         <View>
           <Text className='text-white'>Logged in as {ProfileInfo.username}</Text>
-          {ProfileInfo.expenditure> 0 ? (<Text className='text-white'>{ProfileInfo.expenditure}</Text>):
-          (<Text className='text-white'>Three piece</Text>)}
+          <TouchableOpacity onPress={()=>setIsEditing(true)}><Text className='text-white text-xl mt-20'>Change Calorie Goal</Text></TouchableOpacity>   
+          {isEditing? (<View>
+                        <TextInput value={expenditure} placeholder={expenditure} onChangeText={setExpenditure}/>
+                        <Button title='Save' onPress={handleChangeExpenditure}/>
+                     </View>)
+          :(ProfileInfo.expenditure> 0 ? (<Text className='text-white'>{ProfileInfo.expenditure}</Text>):
+                                         (<Text className='text-white'>0</Text>))}
+          
 
         </View>
         
         }
         
-        <TouchableOpacity ><Text className='text-white text-xl mt-20'>Change Calorie Goal
-          {loggedIn ? (<Text className="text-white">123</Text>):(<Text>321</Text>)}</Text></TouchableOpacity>   
+        
 
         <Button title='Log Out' onPress={handleLogOut}/>
 

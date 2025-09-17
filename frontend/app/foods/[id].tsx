@@ -18,8 +18,7 @@ const FoodDetails = () => {
     
         }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     if(isLoading){
       return
     }
