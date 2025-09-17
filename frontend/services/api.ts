@@ -10,8 +10,8 @@ export const TRACKER_CONFIG = {
     },*/
 }
 
-export const fetchWithAuth = async <T>(endpoint: string, json_options?: RequestInit): Promise<T> => {
-
+export const fetchWithAuth = async <T>(endpoint: string, json_options?: RequestInit, parse:boolean=true): Promise<T> => {
+  
   endpoint = `${TRACKER_CONFIG.BASE_URL}/${endpoint}`
   const token = await SecureStore.getItemAsync('accessToken');
   const options : RequestInit = {...json_options,
@@ -44,8 +44,8 @@ export const fetchWithAuth = async <T>(endpoint: string, json_options?: RequestI
     } 
 
   }
-  const data: T = await response.json();
-  return data
+  //const data: T = await response.json();
+  return parse? response.json() : (undefined as T)
 }
  
 
@@ -95,6 +95,12 @@ export const fetchLogDetails = async (logId: string) : Promise<LoggedFood> => {
   const data = await customGetFetch<LoggedFood>(endpoint);
   
   return data;
+
+}
+export const deleteLogDetails = async (logId: string) => {
+  const endpoint = `caloriebalance/api/logs/${logId}/`;
+  const response = await fetchWithAuth(endpoint,{method: 'DELETE'},false);
+  
 
 }
 

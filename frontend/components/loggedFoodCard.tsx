@@ -3,7 +3,7 @@ import React from 'react'
 import FoodCard from './foodCard'
 import { Link } from 'expo-router'
 import * as SecureStore from 'expo-secure-store';
-import { TRACKER_CONFIG } from '@/services/api';
+import { deleteLogDetails, fetchWithAuth, TRACKER_CONFIG } from '@/services/api';
 
 
 
@@ -12,24 +12,14 @@ const LoggedFoodCard = ({id, food, quantity, date_consumed, calories_consumed, u
   const handleDelete = async (id:string) => {
       
       
-      try { //@ts-ignore
-            const endpoint = `caloriebalance/api/logs/${id}/`;
-            const token = await SecureStore.getItemAsync('accessToken');
-            const response = await fetch(endpoint, {
-              method: 'DELETE',
-              headers: {
-                Authorization: `Bearer ${token}`,
-              }
-            });
-            if (!response.ok){
-              throw new Error('Failed to update quantity');
-            }
-            updateView();
+      try {
+          const del = await deleteLogDetails(id);
+          updateView();
           
       } catch (error){
         console.log(error);
       } finally {
-        
+          updateView();
       }
     }
 

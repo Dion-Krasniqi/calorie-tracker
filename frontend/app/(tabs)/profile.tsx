@@ -52,17 +52,22 @@ const Profile = () => {
   
   return (
     
-    <View className='flex-1 bg-primary'>
+    <View className='flex-1 bg-primary justify-top items-center' >
       
       <Image source={images.bg} className='absolute w-full z-0'/>
       <View className='size-full justify-top items-center mt-20'>
         <Image  source={icons.person} tintColor={'#ffffff'} className='size-40'/>
         {ProfileInfo && 
-        <View>
+        <View className='items-center mb-20'>
           <Text className='text-white'>Logged in as {ProfileInfo.username}</Text>
-          <TouchableOpacity onPress={()=>setIsEditing(true)}><Text className='text-white text-xl mt-20'>Change Calorie Goal</Text></TouchableOpacity>   
+          <TouchableOpacity onPress={()=>setIsEditing(prevState =>!(prevState))}><Text className='text-white text-xl mt-20'>Change Calorie Goal</Text></TouchableOpacity>   
           {isEditing? (<View>
-                        <TextInput value={expenditure} placeholder={expenditure} onChangeText={setExpenditure}/>
+                        <TextInput value={expenditure} 
+                                   placeholder={expenditure} 
+                                   onChangeText={setExpenditure} 
+                                   placeholderTextColor={'#ffff'} 
+                                   textAlign='center'
+                                   className='text-white'/>
                         <Button title='Save' onPress={handleChangeExpenditure}/>
                      </View>)
           :(ProfileInfo.expenditure> 0 ? (<Text className='text-white'>{ProfileInfo.expenditure}</Text>):

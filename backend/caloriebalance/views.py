@@ -243,5 +243,34 @@ class GetRunningAverageAPI_view(APIView):
         }
 
         return Response(response_data, status=status.HTTP_200_OK)
+    
+
+class ParseFoodView(APIView):
+    
+    def post(self, request):
+        food_input = request.data.get('input', '')
+
+        foods = list(Food.objects.values_list('name', flat=True))
+        foods_str = ', '.join(foods[:100])
+
+        prompt = f"""
+        You are a food parser.
+        Users will enter text like "apple 300g" or "2 medium eggs"
+
+        All the available foods: {foods_str}
+        Extract: 
+        -'food': the closest match from the available foods list
+        -'brand': if it is included check if you can find the closest match, if not find an entry with null brand or a generic one
+        -'quantity': numeric quantity in grams, make conversions if neccessary and if no unit included but something more vague make a very good prediction, ex. "one protein bar" and lets say protein bars range from 40-80 grams, make a very good guess in the given range
+
+        Input: '{food_input}'
+        Respond in strict JSON: {{'food':'name', 'quantity':'value', 'brand':'brand_name'*(if available)}}
+        
+        """
+        client = ()
+
+        result = client
+
+        return Response(result)
 
         
