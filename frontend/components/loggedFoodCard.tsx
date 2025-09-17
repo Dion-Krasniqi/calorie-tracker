@@ -13,7 +13,7 @@ const LoggedFoodCard = ({id, food, quantity, date_consumed, calories_consumed, u
       
       
       try { //@ts-ignore
-            const endpoint = `${TRACKER_CONFIG.BASE_URL}/caloriebalance/api/logs/${id}/`;
+            const endpoint = `caloriebalance/api/logs/${id}/`;
             const token = await SecureStore.getItemAsync('accessToken');
             const response = await fetch(endpoint, {
               method: 'DELETE',

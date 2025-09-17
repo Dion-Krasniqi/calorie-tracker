@@ -12,9 +12,12 @@ import { images } from "@/constants/images";
 const getLoginToken = async () => {
             try {
                 const refreshToken = await SecureStore.getItemAsync('refreshToken');
+                if(!refreshToken){
+                    return false;
+                }
                 const tokenResponse = await fetch(`${TRACKER_CONFIG.BASE_URL}/api/token/refresh/`, {
                 method:'POST',
-                headers: {Accept: 'application/json', 'Content-Type': 'application/json',},
+                headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({refresh:refreshToken}),
                 });
 
