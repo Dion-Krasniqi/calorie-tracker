@@ -129,9 +129,10 @@ class GetDailyIntakeAPI_view(APIView):
         daily_log = LoggedFood.objects.filter(user=request.user, date_consumed=requested_date)
 
         total_calories = daily_log.aggregate(Sum('calories_consumed'))['calories_consumed__sum'] or 0
-        total_macros = {'protein':daily_log.aggregate(Sum('food__protein'))['food__protein__sum'] or 0,
-                        'carbohydrates':daily_log.aggregate(Sum('food__carbohydrates'))['food__carbohydrates__sum'] or 0,
-                        'fats':daily_log.aggregate(Sum('food__fats'))['food__fats__sum'] or 0,}
+        total_macros = {
+            'protein':sum((loggedFood.quantity/100)*loggedFood.food.protein for loggedFood in daily_log),
+            'carbohydrates':sum((loggedFood.quantity/100)*loggedFood.food.carbohydrates for loggedFood in daily_log),
+            'fats':sum((loggedFood.quantity/100)*loggedFood.food.fats for loggedFood in daily_log)}
          
         response_data = {
             'total_calories':round(total_calories, 2),
