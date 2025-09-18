@@ -12,6 +12,10 @@ const _layout = () => {
             name="search"
             options={{title:'search',headerShown:false, tabBarStyle:{display:'none'} }}
         />
+        <Tabs.Screen
+            name="quickTrack"
+            options={{title:'quickTrack',headerShown:false, tabBarStyle:{display:'none'} }}
+        />
        </Tabs>  
         
     

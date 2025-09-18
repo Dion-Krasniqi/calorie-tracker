@@ -26,6 +26,11 @@ interface LoginResponse {
     refresh: string;
 }
 
+interface RunningAverageStat {
+    date: string;
+    average_calories: number;
+}
+
 /*interface LogDetails {
     id: number;
     food: Food;

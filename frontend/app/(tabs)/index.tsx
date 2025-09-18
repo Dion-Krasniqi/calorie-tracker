@@ -4,7 +4,7 @@ import { images } from "@/constants/images";
 import { ActivityIndicator, Button, Dimensions, FlatList, Image, ScrollView, ScrollViewBase, Text, TextInput, View } from "react-native";
 import { Link, useRouter } from "expo-router";
 import useFetch from "@/services/useFetch";
-import { fetchFoods, fetchLogs, fetchProfile, TRACKER_CONFIG } from "@/services/api";
+import { fetchFoods, fetchLogs, fetchLogsCurrent, fetchProfile, TRACKER_CONFIG } from "@/services/api";
 import { useEffect, useState } from "react";
 import FoodCard from "@/components/foodCard";
 import LoggedFoodCard from "@/components/loggedFoodCard";
@@ -20,7 +20,7 @@ export default function Index() {
   
   const router = useRouter();
 
-  const {data: logsFood, loading:logsLoading, error:logsError, refetch:loadLogs} = useFetch(() =>fetchLogs(), false);
+  const {data: logsFood, loading:logsLoading, error:logsError, refetch:loadLogs} = useFetch(() =>fetchLogsCurrent(), false);
   const {data: fetchedProfile, refetch: loadProfile} = useFetch( ()=> fetchProfile(), false);      
 
 
@@ -51,7 +51,7 @@ export default function Index() {
               <Text className="text-white text-9xl">DATA</Text>
               <View className='w-[75%] mt-12' style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between',}}>
                 <AddEntry buttonText="Add Food" link='/otherPages/search/'/>
-                <AddEntry buttonText="Quick Track" link='/otherPages/search/'/>
+                <AddEntry buttonText="Quick Track" link='/otherPages/quickTrack/'/>
               </View>
               
               <>    

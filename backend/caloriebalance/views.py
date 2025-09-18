@@ -66,6 +66,15 @@ class LoggedFoodListAPI_view(generics.ListAPIView): # All logged foods
 
     def get_queryset(self):
         return self.queryset.filter(user=self.request.user)
+
+class DailyLoggedFoodAPI_view(generics.ListAPIView): # Current Day foods
+    queryset = LoggedFood.objects.filter(date_consumed = date.today())
+    serializer_class = LoggedFoodSerializer
+
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return self.queryset.filter(user=self.request.user)
     
 
 class FoodListAPI_view(generics.ListAPIView): # All foods in the database
@@ -249,7 +258,7 @@ class ParseFoodView(APIView):
     
     def post(self, request):
         food_input = request.data.get('input', '')
-
+        print(food_input)
         foods = list(Food.objects.values_list('name', flat=True))
         foods_str = ', '.join(foods[:100])
 

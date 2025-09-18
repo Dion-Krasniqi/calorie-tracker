@@ -1,6 +1,8 @@
 import { loggedIn } from '@/app/(tabs)';
+import { useRouter } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
 
+const router = useRouter();
 
 export const TRACKER_CONFIG = {
     BASE_URL: 'http://192.168.1.9:8000',
@@ -11,6 +13,7 @@ export const TRACKER_CONFIG = {
 }
 
 export const fetchWithAuth = async <T>(endpoint: string, json_options?: RequestInit, parse:boolean=true): Promise<T> => {
+  
   
   endpoint = `${TRACKER_CONFIG.BASE_URL}/${endpoint}`
   const token = await SecureStore.getItemAsync('accessToken');
@@ -28,7 +31,7 @@ export const fetchWithAuth = async <T>(endpoint: string, json_options?: RequestI
         const refreshToken = await SecureStore.getItemAsync('refreshToken');
         const tokenResponse = await fetch(`${TRACKER_CONFIG.BASE_URL}/api/token/refresh/`, {
         method:'POST',
-        headers: {Accept: 'application/json'},
+        headers: {Accept: 'application/json', 'Content-Type': 'application/json'},
         body: JSON.stringify({refresh:refreshToken}),
     })
         const newData = await tokenResponse.json()
@@ -38,10 +41,10 @@ export const fetchWithAuth = async <T>(endpoint: string, json_options?: RequestI
       } catch (error) {
         await SecureStore.setItemAsync('accessToken', '');
         await SecureStore.setItemAsync('refreshToken', '') ;
-        //logout
-        throw (error)
+        router.replace('/login');
     } 
     } 
+    
 
   }
   //const data: T = await response.json();
@@ -89,6 +92,15 @@ export const fetchLogs = async() => {
 
 }
 
+export const fetchLogsCurrent = async() => {
+  const endpoint = `caloriebalance/api/logs/today/`;
+  const data = await customGetFetch<LoggedFood>(endpoint);
+
+  return data;
+
+}
+
+
 
 export const fetchLogDetails = async (logId: string) : Promise<LoggedFood> => {
   const endpoint = `caloriebalance/api/logs/${logId}/`;
@@ -113,26 +125,14 @@ export const fetchProfile = async () => {
 }
 
 
-/*export const changeLog = async (logId:string, newQuantity: string) => {
-  try{
-    const endpoint = `${TRACKER_CONFIG.BASE_URL}/caloriebalance/api/logs/${logId}/`;
-    const token = await SecureStore.getItemAsync('accessToken');
-    const response = await fetch(endpoint, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({quantity: newQuantity}),
-    });
-    if (!response.ok){
-      throw new Error('Failed to fetch profile information');
-    }
-    return response;
-    
-  } catch (error) {
-    console.log(error);
-    throw(error);
-  }
-}*/
+export const fetchRunningAverage = async () => {
+  const requestedDate : Date = new Date();
+  const month = `0${requestedDate.getMonth()+1}`.slice(-2)
+  const dateString = `${requestedDate.getFullYear()}-${month}-${requestedDate.getDate()}`;
+  const endpoint = `caloriebalance/api/stats/average/?date=${dateString}`;
+  const options = {method: 'GET'}
+
+  const data = await fetchWithAuth<RunningAverageStat>(endpoint, options);
+
+  return data;
+}
