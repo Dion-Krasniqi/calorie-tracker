@@ -76,25 +76,6 @@ class LogoutAPI_view(generics.GenericAPIView):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 class ProfileAPI_view(APIView):
      
      permission_classes = [IsAuthenticated]
@@ -105,3 +86,15 @@ class ProfileAPI_view(APIView):
           data['expenditure'] = self.request.user.expenditure if self.request.user.expenditure is not None else 0
 
           return Response(data, status=status.HTTP_200_OK)
+     
+class UpdateExpenditureAPI_view(generics.UpdateAPIView):
+
+     permission_classes = [IsAuthenticated]
+     serializer_class = UserSerializer
+
+     def get_object(self):
+          return self.request.user
+
+     def perform_update(self, serializer):
+          new_expenditure = serializer.validated_data.get('expenditure', serializer.instance.expenditure)
+          serializer.save(expenditure = new_expenditure)

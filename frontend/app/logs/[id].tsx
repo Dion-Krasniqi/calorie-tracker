@@ -20,8 +20,7 @@ const LogDetails = () => {
 
   const router = useRouter();
 
-  const handleSubmit = async (e) => {
-      e.preventDefault();
+  const handleSubmit = async () => {
       if (isLoading) {
         return
       }

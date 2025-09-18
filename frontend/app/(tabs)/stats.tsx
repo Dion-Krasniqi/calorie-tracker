@@ -21,8 +21,11 @@ const Stats = () => {
     <View className='flex-1 bg-primary '>
       <Image source={images.bg} className='absolute w-full z-0'/>
       <View className='flex-1 justify-center items-center'>
-        <RunningAverage {...avgData}/>
-        <Button title='Re-Calculate' onPress={loadAverage}/>
+        {avgData? (<View>
+                    <RunningAverage {...avgData}/>
+                   </View>) : (<Text>No data available</Text>)}
+        <Button title={avgData? 'Re-Calculate' : 'Calculate'} onPress={loadAverage}/>
+        
       </View>
       
     </View>

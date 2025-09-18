@@ -25,7 +25,7 @@ const Search = () => {
       if(searchQuery.trim()) {
           await loadFoods();
       } else {
-          
+          await loadFoods();
       }
 
     },500);
@@ -59,7 +59,9 @@ const Search = () => {
                     {error && (
                       <Text className='text-red-500 px-5 my-3'>Error: {error.message}</Text>
                     )}
-                    {!loading && !error && searchQuery.trim() && foods?.length > 0 && (
+                    
+                    {//@ts-ignore foods is an array of food
+                      !loading && !error && searchQuery.trim() && foods?.length > 0 && (
                       <Text className='text-xl text-white font-bold'>Search results for{' '}
                       <Text className='text-accent'>{searchQuery}</Text></Text>
                        )}

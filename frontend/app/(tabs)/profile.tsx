@@ -2,7 +2,7 @@ import { View, Text, Image, Button, TouchableOpacity, TextInput } from 'react-na
 import useFetch from "@/services/useFetch";
 import { icons } from '@/constants/icons'
 import { images } from '@/constants/images'
-import { fetchProfile, fetchWithAuth} from '@/services/api'
+import { fetchProfile, fetchWithAuth, updateExpenditure} from '@/services/api'
 import { useEffect, useState } from 'react';
 import { loggedIn } from '.';
 import * as SecureStore from 'expo-secure-store';
@@ -31,16 +31,20 @@ const Profile = () => {
   const {data: ProfileInfo, refetch: loadProfile} = useFetch( ()=> fetchProfile(), false);
 
   const [isEditing, setIsEditing] = useState(false);
-  const [expenditure, setExpenditure] = useState(`${ProfileInfo?.expenditure}` || '0');
+  const [expenditure, setExpenditure] = useState(ProfileInfo?.expenditure != undefined ? (ProfileInfo.expenditure):(0));
 
   const handleChangeExpenditure = async () => {
-    if(isEditing) {
-      return;
-    }
+    
     try {
+      console.log('ugh');
+      await updateExpenditure(expenditure);
       
-    } catch{
-
+      loadProfile();
+     
+    } catch (error){
+      throw(error);
+    } finally{
+      setIsEditing(false);
     }
 
   }
@@ -62,8 +66,9 @@ const Profile = () => {
           <Text className='text-white'>Logged in as {ProfileInfo.username}</Text>
           <TouchableOpacity onPress={()=>setIsEditing(prevState =>!(prevState))}><Text className='text-white text-xl mt-20'>Change Calorie Goal</Text></TouchableOpacity>   
           {isEditing? (<View>
-                        <TextInput value={expenditure} 
-                                   placeholder={expenditure} 
+                        <TextInput value={`${expenditure}`} 
+                                   placeholder={`${expenditure}`} 
+                                   //@ts-ignore
                                    onChangeText={setExpenditure} 
                                    placeholderTextColor={'#ffff'} 
                                    textAlign='center'

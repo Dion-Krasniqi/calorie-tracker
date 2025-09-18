@@ -68,7 +68,7 @@ export const fetchFoods = async ({ query } : { query : string}) => {
   //Have to add brand here aswell
     const endpoint = query ? `caloriebalance/api/foodsearch/?name=${encodeURIComponent(query)}`
     :`caloriebalance/api/foodlist/`;
-    const data = await customGetFetch<Food>(endpoint);
+    const data = await customGetFetch<Array<Food>>(endpoint);
 
     return data;
 
@@ -109,11 +109,11 @@ export const fetchLogDetails = async (logId: string) : Promise<LoggedFood> => {
   return data;
 
 }
+
 export const deleteLogDetails = async (logId: string) => {
   const endpoint = `caloriebalance/api/logs/${logId}/`;
   const response = await fetchWithAuth(endpoint,{method: 'DELETE'},false);
   
-
 }
 
 export const fetchProfile = async () => {
@@ -122,6 +122,14 @@ export const fetchProfile = async () => {
   
   return data;
     
+}
+
+export const updateExpenditure = async (expenditure:number) => {
+  const endpoint = `account/api/profile/update/`;
+  const options = {method: 'PATCH', headers: {'Content-Type': 'application/json'},  body: JSON.stringify({expenditure:expenditure})};
+  const data = await fetchWithAuth(endpoint,options);
+  
+  return data;
 }
 
 
