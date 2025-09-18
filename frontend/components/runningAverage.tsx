@@ -1,10 +1,10 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 
-const RunningAverage = () => {
+const RunningAverage = ({date:string, average_calories}: RunningAverageStat) => {
   return (
     <View>
-      <Text>R</Text>
+      <Text className='text-white'>Average Calories for the past week:{average_calories}</Text>
     </View>
   )
 }
