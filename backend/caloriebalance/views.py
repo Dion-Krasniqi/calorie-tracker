@@ -4,6 +4,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db.models import F, Sum
@@ -104,7 +105,8 @@ class FoodSearchAPI_view(generics.ListAPIView):
         if food_name:
             queryset = queryset.filter(name__icontains=food_name)
         if food_brand:
-            queryset = queryset.filter(brand__icontains=food_brand)   
+            queryset = queryset.filter(brand__icontains=food_brand) 
+
         return queryset
     
     
@@ -121,14 +123,8 @@ class GetDailyIntakeAPI_view(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self,request):
-        requested_date = request.query_params.get('date', None)
-        if requested_date:
-            try:
-                requested_date = date.fromisoformat(requested_date)
-            except ValueError:
-                return Response({"error":"Date must be of format YYYY-MM-DD"}, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            requested_date = date.today()
+        
+        requested_date = date.today()
         
         daily_log = LoggedFood.objects.filter(user=request.user, date_consumed=requested_date)
 
@@ -138,11 +134,10 @@ class GetDailyIntakeAPI_view(APIView):
                         'fats':daily_log.aggregate(Sum('food__fats'))['food__fats__sum'] or 0,}
          
         response_data = {
-            'date':requested_date.isoformat,
             'total_calories':round(total_calories, 2),
-            'protein': round(total_macros['protein'], 2),
-            'carbohydrates': round(total_macros['carbohydrates'], 2),
-            'fats': round(total_macros['fats'], 2),
+            'protein': round(float(total_macros['protein']), 2),
+            'carbohydrates': round(float(total_macros['carbohydrates']), 2),
+            'fats': round(float(total_macros['fats']), 2),
         }
         expenditure = request.user.expenditure   
         if expenditure is not None:

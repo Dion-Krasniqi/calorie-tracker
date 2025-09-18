@@ -16,10 +16,6 @@ const Search = () => {
 
   const {data: foods, loading, error, refetch: loadFoods, reset} = useFetch(() => fetchFoods({ query:  searchQuery }), false);
 
-  useEffect(() => {
-        loadFoods();
-    }, []);
-
   useEffect(() =>{
     const timeOutId = setTimeout(async () => {
       if(searchQuery.trim()) {

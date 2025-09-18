@@ -15,12 +15,9 @@ const LoggedFoodCard = ({id, food, quantity, date_consumed, calories_consumed, u
       try {
           const del = await deleteLogDetails(id);
           updateView();
-          
       } catch (error){
         console.log(error);
-      } finally {
-          updateView();
-      }
+      } 
     }
 
   return (

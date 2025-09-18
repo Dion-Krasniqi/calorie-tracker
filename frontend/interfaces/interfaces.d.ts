@@ -31,6 +31,15 @@ interface RunningAverageStat {
     average_calories: number;
 }
 
+interface IntakeCurrent {
+    total_calories: number;
+    protein: number;
+    carbohydrates: number;
+    fats: number;
+    remaining_calories?:number;
+    expenditure?:number;
+}
+
 /*interface LogDetails {
     id: number;
     food: Food;

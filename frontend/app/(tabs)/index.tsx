@@ -4,12 +4,13 @@ import { images } from "@/constants/images";
 import { ActivityIndicator, Button, Dimensions, FlatList, Image, ScrollView, ScrollViewBase, Text, TextInput, View } from "react-native";
 import { Link, useRouter } from "expo-router";
 import useFetch from "@/services/useFetch";
-import { fetchFoods, fetchLogs, fetchLogsCurrent, fetchProfile, TRACKER_CONFIG } from "@/services/api";
+import { fetchFoods, fetchIntakeCurrent, fetchLogs, fetchLogsCurrent, fetchProfile, TRACKER_CONFIG } from "@/services/api";
 import { useEffect, useState } from "react";
 import FoodCard from "@/components/foodCard";
 import LoggedFoodCard from "@/components/loggedFoodCard";
 import * as SecureStore from 'expo-secure-store';
 import AddEntry from "@/components/addEntry";
+import IntakeDetail from "@/components/intakeDetail";
 
 
 
@@ -22,9 +23,11 @@ export default function Index() {
 
   const {data: logsFood, loading:logsLoading, error:logsError, refetch:loadLogs} = useFetch(() =>fetchLogsCurrent(), false);
   const {data: fetchedProfile, refetch: loadProfile} = useFetch( ()=> fetchProfile(), false);      
+  const {data: intakeToday, refetch: loadIntake} = useFetch( ()=> fetchIntakeCurrent(), false);  
 
 
   const updateView = () => {
+      loadIntake();
       loadLogs();
   }
   
@@ -49,6 +52,7 @@ export default function Index() {
             
             <View style={{alignItems:'center'}}>
               <Text className="text-white text-9xl">DATA</Text>
+              {intakeToday && <IntakeDetail {...intakeToday} />}
               <View className='w-[75%] mt-12' style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between',}}>
                 <AddEntry buttonText="Add Food" link='/otherPages/search/'/>
                 <AddEntry buttonText="Quick Track" link='/otherPages/quickTrack/'/>

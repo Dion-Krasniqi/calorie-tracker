@@ -133,6 +133,19 @@ export const updateExpenditure = async (expenditure:number) => {
 }
 
 
+export const fetchIntakeCurrent = async () => {
+  const endpoint = `caloriebalance/api/stats/daily/`;
+  const options = {method: 'GET'}
+
+  const data = await fetchWithAuth<IntakeCurrent>(endpoint, options);
+  console.log(data);
+
+  return data;
+}
+
+
+
+
 export const fetchRunningAverage = async () => {
   const requestedDate : Date = new Date();
   const month = `0${requestedDate.getMonth()+1}`.slice(-2)
