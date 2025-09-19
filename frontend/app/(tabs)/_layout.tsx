@@ -7,15 +7,15 @@ import { icons } from "@/constants/icons";
 
 const TabIcon = ({ focused, icon, title }: any) => {
     if (focused) {
-            return(<ImageBackground source={images.highlight} className='flex flex-row w-full flex-1 min-w-[112px]
-                    min-h-16 mt-6 justify-center items-center rounded-full overflow-hidden'>
+            return(<ImageBackground source={images.highlight} className='flex flex-row w-full flex-1 min-w-[120px]
+                    min-h-14 mt-6 justify-center items-center rounded-full overflow-hidden'>
                         <Image source={icon} tintColor={'#151312'} className='size-5'/>
                         <Text className='text-secondary text-base font-semibold ml-2'>{title}</Text>
                     </ImageBackground>)  
     }
     return (
         <View className='size-full justify-center
-        items-center mt-6 items-center rounded-full'><Image source={icon} tintColor={'#a8b5db'} className='size-5'/></View>
+        items-center mt-6 items-center rounded-full'><Image source={icon} tintColor={'blue-100'} className='size-5'/></View>
     )
 }
 
@@ -31,22 +31,22 @@ const _layout = () => {
                 alignItems:'center',
             },
             tabBarStyle: {
-                backgroundColor: '#0f0d23',
+                backgroundColor: '#0F1729',
                 borderRadius:50,
                 marginHorizontal:20,
-                marginBottom:36,
+                marginBottom:50,
                 height:52,
                 position:'absolute',
                 overflow:'hidden',
                 borderWidth:1,
-                borderColor:'#0f0d23',
+                borderColor:'#0F1729',
             }
 
         }}
     >
         <Tabs.Screen 
             name="index"
-            options={{ title:'Home', headerShown:false, tabBarIcon:({ focused }) => (
+            options={{ title:'Home', headerShown:false, tabBarIcon:({ focused })=> (
                 
                     <TabIcon focused={focused} icon={icons.home} title='Home'/>
                 

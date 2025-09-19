@@ -3,6 +3,7 @@ import React from 'react'
 import { Href, Link, RelativePathString, useRouter } from 'expo-router';
 
 
+
 interface Props {
     buttonText: string;
     link: string;
@@ -15,10 +16,10 @@ const AddEntry = ({buttonText, link}: Props) => {
   return (
    <Link  href={link as Href} asChild> 
    <TouchableOpacity>
-    <View className='flex-row items-center bg-dark-200 rounded-full px-5 py-4'>
+    <View className='flex-row items-center bg-blue-100 rounded-xl px-5 py-4'>
       
         
-            <Text>{buttonText}</Text>
+            <Text className='font-[500]'>{buttonText}</Text>
         
       
         </View>

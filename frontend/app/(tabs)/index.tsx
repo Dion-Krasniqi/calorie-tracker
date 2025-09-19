@@ -11,6 +11,7 @@ import LoggedFoodCard from "@/components/loggedFoodCard";
 import * as SecureStore from 'expo-secure-store';
 import AddEntry from "@/components/addEntry";
 import IntakeDetail from "@/components/intakeDetail";
+import { SafeAreaFrameContext, SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 
 
@@ -42,13 +43,14 @@ export default function Index() {
   
 
   return (
+  <SafeAreaProvider >
+    <SafeAreaView className="flex-1 bg-primary">
     
-    <View className="flex-1 bg-primary" >
         <Image source={images.bg} className="absolute w-full z-0"/>
         <ScrollView className="flex-1 px-5" showsVerticalScrollIndicator={false} 
         contentContainerStyle={{ minHeight:'100%', paddingBottom:10}}>
 
-            <Image source={icons.logo} className="w-12 h-10 mt-20 mb-5 mx-auto"/>
+
             
             <View style={{alignItems:'center'}}>
               <Text className="text-white text-9xl">DATA</Text>
@@ -73,7 +75,11 @@ export default function Index() {
         </ScrollView>
 
 
-    </View>
+   
+    </SafeAreaView>
+  </SafeAreaProvider>
+    
+    
     
   );
 }
