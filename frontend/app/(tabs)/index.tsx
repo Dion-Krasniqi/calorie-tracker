@@ -43,10 +43,15 @@ export default function Index() {
   
 
   return (
-  <SafeAreaProvider >
+  <SafeAreaProvider>
     <SafeAreaView className="flex-1 bg-primary">
     
-        <Image source={images.bg} className="absolute w-full z-0"/>
+     
+      <Image source={images.bgg}
+             className=" absolute w-full z-0" 
+            resizeMode="cover"
+      />
+    
         <ScrollView className="flex-1 px-5" showsVerticalScrollIndicator={false} 
         contentContainerStyle={{ minHeight:'100%', paddingBottom:10}}>
 
@@ -61,12 +66,12 @@ export default function Index() {
               </View>
               
               <>    
-                    <Text className="text-lg text-white font-bold mt-5 mb-3">Latest Foods</Text>
+                    
                     <FlatList data={logsFood} 
                               renderItem={({item}) => (<LoggedFoodCard {...item} updateView={updateView}/>)}
                               keyExtractor={(item) =>item.id.toString()}
                               /*columnWrapperStyle={{justifyContent:'flex-start', gap:20, paddingRight:5, marginBottom:10}}*/
-                              className="mt-2 pb-32"
+                              className="mt-16 pb-32 "
                               scrollEnabled={false}
                     />
                   </>
@@ -76,10 +81,10 @@ export default function Index() {
 
 
    
-    </SafeAreaView>
-  </SafeAreaProvider>
+    </SafeAreaView >
+  
     
     
-    
+    </SafeAreaProvider>
   );
 }

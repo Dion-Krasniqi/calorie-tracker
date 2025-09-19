@@ -8,6 +8,12 @@ interface Food {
     fats: number;
 
 };
+
+interface FoodCardProp {
+    food_data:Food;
+    quantity: number;
+}
+
 interface LoggedFood {
     id: number;
     food: Food;

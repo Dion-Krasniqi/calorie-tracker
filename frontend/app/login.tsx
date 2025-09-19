@@ -5,6 +5,7 @@ import { TRACKER_CONFIG } from '@/services/api';
 import { useRouter } from 'expo-router';
 import LoginPage from '@/components/loginPage';
 import { images } from "@/constants/images";
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 
 
@@ -12,7 +13,7 @@ import { images } from "@/constants/images";
 const getLoginToken = async () => {
             try {
                 const refreshToken = await SecureStore.getItemAsync('refreshToken');
-                if(!refreshToken){
+                if(!refreshToken || refreshToken.length==0){
                     return false;
                 }
                 const tokenResponse = await fetch(`${TRACKER_CONFIG.BASE_URL}/api/token/refresh/`, {
@@ -57,6 +58,7 @@ const Login = () => {
 
     useEffect(()=>{
         if(loggedIn){
+            console.log('in');
             router.replace('/(tabs)');
         };
 
@@ -65,11 +67,14 @@ const Login = () => {
 
     
     return (
+    
      <View className='flex-1 bg-primary' style={{alignItems:'center'}}>
+     
       <Image source={images.bg} className="absolute w-full z-0"/>
         {checkingLogin && <ActivityIndicator size='large' color='#ffffff' />}
         {!checkingLogin && !loggedIn && <LoginPage />}
      </View>
+     
     )
     
 }

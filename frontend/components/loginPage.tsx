@@ -4,6 +4,7 @@ import { TextInput } from 'react-native';
 import { fetchWithAuth, TRACKER_CONFIG } from '@/services/api';
 import { useRouter } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 
@@ -36,7 +37,6 @@ const LoginPage = () => {
       } catch (error){
         setIsLoading(false);
       } finally {
-        
       }
     }
 
@@ -57,6 +57,7 @@ const LoginPage = () => {
                 
                 <Button title='Login' onPress={handleSubmit}/>
           </View>
+        
         
   )
 }
