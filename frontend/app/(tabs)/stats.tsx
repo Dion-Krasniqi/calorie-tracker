@@ -19,7 +19,7 @@ const Stats = () => {
 
 
     <View className='flex-1 bg-primary '>
-      <Image source={images.bg} className='absolute w-full z-0'/>
+      <Image source={images.bgg} className='absolute w-full z-0'/>
       <View className='flex-1 justify-center items-center'>
         {avgData? (<View>
                     <RunningAverage {...avgData}/>

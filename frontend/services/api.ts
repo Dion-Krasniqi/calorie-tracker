@@ -5,7 +5,7 @@ import * as SecureStore from 'expo-secure-store';
 const router = useRouter();
 
 export const TRACKER_CONFIG = {
-    BASE_URL: 'http://192.168.1.9:8000',
+    BASE_URL: 'http://192.168.1.4:8000',
    /* headers: { 
         accept: "application/json" ,
         Authorization: `Bearer ${getSecureItem()}`

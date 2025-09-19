@@ -33,6 +33,12 @@ const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [expenditure, setExpenditure] = useState(ProfileInfo?.expenditure != undefined ? (ProfileInfo.expenditure):(0));
 
+  useEffect(() => { 
+    loadProfile();
+      
+    }, [loggedIn]);
+  
+
   const handleChangeExpenditure = async () => {
     
     try {
@@ -49,34 +55,35 @@ const Profile = () => {
 
   }
 
-  useEffect(() => { loadProfile();
-      
-    }, [loggedIn]);
   
   
   return (
     
     <View className='flex-1 bg-primary justify-top items-center' >
       
-      <Image source={images.bg} className='absolute w-full z-0'/>
-      <View className='size-full justify-top items-center mt-20'>
-        <Image  source={icons.person} tintColor={'#ffffff'} className='size-40'/>
+      <Image source={images.bgg} className='absolute w-full z-0'/>
+      <View className='size-full justify-top items-center mt-32'>
+        {/*<Image  source={icons.person} tintColor={'#ffffff'} className='size-40'/>*/}
         {ProfileInfo && 
         <View className='items-center mb-20'>
-          <Text className='text-white'>Logged in as {ProfileInfo.username}</Text>
+          <Text className='text-white font-bold text-4xl'>Logged in as {ProfileInfo.username}</Text>
+          <View className='items-center mt-24'>
           <TouchableOpacity onPress={()=>setIsEditing(prevState =>!(prevState))}><Text className='text-white text-xl mt-20'>Change Calorie Goal</Text></TouchableOpacity>   
-          {isEditing? (<View>
-                        <TextInput value={`${expenditure}`} 
+          {isEditing? (<View className='items-center w-55'>
+                        <TextInput value={expenditure} 
                                    placeholder={`${expenditure}`} 
                                    //@ts-ignore
                                    onChangeText={setExpenditure} 
                                    placeholderTextColor={'#ffff'} 
                                    textAlign='center'
-                                   className='text-white'/>
-                        <Button title='Save' onPress={handleChangeExpenditure}/>
+                                   className='w-55 text-white rounded-xl bg-blue-300 border-white/20 border-2 flex-center'/>
+                        <TouchableOpacity className='px-6 py-4 mt-6 justify-center items-center bg-blue-100 rounded-xl' onPress={()=>handleSubmit()}>
+                                                      <Text className=' text-xl font-bold'>Save</Text>
+                                            </TouchableOpacity>
                      </View>)
           :(ProfileInfo.expenditure> 0 ? (<Text className='text-white'>{ProfileInfo.expenditure}</Text>):
                                          (<Text className='text-white'>0</Text>))}
+          </View>
           
 
         </View>
@@ -85,7 +92,10 @@ const Profile = () => {
         
         
 
-        <Button title='Log Out' onPress={handleLogOut}/>
+        <TouchableOpacity className='px-6 py-4 mt-32 justify-center items-center bg-blue-100 rounded-xl' 
+        onPress={()=>handleLogOut()}>
+             <Text className=' text-xl font-bold'>Logout</Text>
+        </TouchableOpacity>
 
       </View>
       
