@@ -33,7 +33,7 @@ const Search = () => {
 
   return (
     <View className='flex-1 bg-primary'>
-      <Image source={images.bg} className='flex-1 absolute w-full z-0' resizeMode='cover' />
+      <Image source={images.bgg} className='flex-1 absolute w-full z-0' resizeMode='cover' />
       <FlatList data={foods} 
                 renderItem={ ({item}) => <FoodCardSearch {...item}/>}
                 keyExtractor={(item) => item.id.toString()} 
