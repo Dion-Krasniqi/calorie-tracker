@@ -31,10 +31,11 @@ const Profile = () => {
   const {data: ProfileInfo, refetch: loadProfile} = useFetch( ()=> fetchProfile(), false);
 
   const [isEditing, setIsEditing] = useState(false);
-  const [expenditure, setExpenditure] = useState(ProfileInfo?.expenditure != undefined ? (ProfileInfo.expenditure):(0));
+  const [expenditure, setExpenditure] = useState(ProfileInfo? (ProfileInfo.expenditure):'');
 
   useEffect(() => { 
     loadProfile();
+    
       
     }, [loggedIn]);
   
@@ -43,6 +44,7 @@ const Profile = () => {
     
     try {
       console.log('ugh');
+      //@ts-ignore , gets parsed as string in json
       await updateExpenditure(expenditure);
       
       loadProfile();
@@ -67,17 +69,21 @@ const Profile = () => {
         {ProfileInfo && 
         <View className='items-center mb-20'>
           <Text className='text-white font-bold text-4xl'>Logged in as {ProfileInfo.username}</Text>
-          <View className='items-center mt-24'>
+          <View className='items-center mt-24 w-[80%]'>
           <TouchableOpacity onPress={()=>setIsEditing(prevState =>!(prevState))}><Text className='text-white text-xl mt-20'>Change Calorie Goal</Text></TouchableOpacity>   
-          {isEditing? (<View className='items-center w-55'>
-                        <TextInput value={expenditure} 
-                                   placeholder={`${expenditure}`} 
+          {isEditing? (<View className='items-center w-[100%]'>
+                        <TextInput  
+                                   placeholder={String(ProfileInfo?.expenditure)}
                                    //@ts-ignore
                                    onChangeText={setExpenditure} 
-                                   placeholderTextColor={'#ffff'} 
+                                   keyboardType='numeric' 
+                                   placeholderTextColor={'darkgrey'} 
                                    textAlign='center'
-                                   className='w-55 text-white rounded-xl bg-blue-300 border-white/20 border-2 flex-center'/>
-                        <TouchableOpacity className='px-6 py-4 mt-6 justify-center items-center bg-blue-100 rounded-xl' onPress={()=>handleSubmit()}>
+                                   style={{width: 100,   
+                                          height: 48,
+                                          marginTop:20}}
+                                   className='text-white rounded-xl bg-blue-300 border-white/20 border-2 '/>
+                        <TouchableOpacity className='px-6 py-4 mt-6 justify-center items-center bg-blue-100 rounded-xl' onPress={()=>handleChangeExpenditure()}>
                                                       <Text className=' text-xl font-bold'>Save</Text>
                                             </TouchableOpacity>
                      </View>)

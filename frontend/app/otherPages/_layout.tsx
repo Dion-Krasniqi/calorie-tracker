@@ -1,25 +1,20 @@
 import { View, Text, ImageBackground, Image } from 'react-native'
 import React from 'react'
-import { Tabs } from 'expo-router'
+import { Stack, Tabs } from 'expo-router'
 
 
 
 
 const _layout = () => {
-  return (
-       <Tabs>
-        <Tabs.Screen
-            name="search"
-            options={{title:'search',headerShown:false, tabBarStyle:{display:'none'} }}
-        />
-        <Tabs.Screen
-            name="quickTrack"
-            options={{title:'quickTrack',headerShown:false, tabBarStyle:{display:'none'} }}
-        />
-       </Tabs>  
-        
-    
-  )
+ return (
+    <Stack screenOptions={{ headerShown: false }}>
+
+      <Stack.Screen name="search" />
+
+      <Stack.Screen name="quickTrack" />
+      
+    </Stack>
+  );
 }
 
 export default _layout

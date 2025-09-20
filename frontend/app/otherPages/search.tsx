@@ -7,6 +7,7 @@ import { fetchFoods } from "@/services/api";
 import { icons } from '@/constants/icons'
 import SearchBar from '@/components/searchBar'
 import FoodCardSearch from '@/components/foodCardSearch';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 
 const Search = () => {
@@ -32,19 +33,18 @@ const Search = () => {
 
 
   return (
-    <View className='flex-1 bg-primary'>
+    <SafeAreaProvider>
+    <SafeAreaView className='flex-1 bg-primary '>
       <Image source={images.bgg} className='flex-1 absolute w-full z-0' resizeMode='cover' />
       <FlatList data={foods} 
                 renderItem={ ({item}) => <FoodCardSearch {...item}/>}
                 keyExtractor={(item) => item.id.toString()} 
-                className='px-3'
+                className='px-3 mt-16'
                 
-                contentContainerStyle={{ paddingBottom: 100}}
+                contentContainerStyle={{ paddingBottom: 100,}}
                 ListHeaderComponent={
                   <>
-                  <View className='w-full flex-row justify-center mt-20 items-center'>
-                    <Image source={icons.logo} className='w-12 h-10'/>
-                  </View>
+                  
                   <View className='my-5'>
                     <SearchBar placeholder='Search foods...'
                                value={searchQuery}
@@ -59,7 +59,7 @@ const Search = () => {
                     {//@ts-ignore foods is an array of food
                       !loading && !error && searchQuery.trim() && foods?.length > 0 && (
                       <Text className='text-xl text-white font-bold'>Search results for{' '}
-                      <Text className='text-accent'>{searchQuery}</Text></Text>
+                      <Text className='text-blue-100'>{searchQuery}</Text></Text>
                        )}
                   </>
                 }
@@ -67,7 +67,8 @@ const Search = () => {
                   (<View className='mt-10 px-5'>
                       <Text className='text-center text-gray-500'>{searchQuery.trim() ? 'No Foods Found' : 'Search For a Food'}</Text>
                     </View>) : null}/>
-    </View>
+    </SafeAreaView>
+  </SafeAreaProvider>
   )
 }
 

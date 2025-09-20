@@ -2,11 +2,12 @@ import { View, Text, Image, TextInput, TouchableOpacity, Pressable } from 'react
 import React, { useState } from 'react'
 import { images } from '@/constants/images';
 import { icons } from '@/constants/icons';
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import { fetchWithAuth } from '@/services/api';
 
 const QuickTrack = () => {
 
+  const router = useRouter();
   const [userInput, setUserInput] = useState('');
   const handlePress = async () => {
     if (userInput.length==0){
@@ -17,19 +18,20 @@ const QuickTrack = () => {
     const options = {method:'POST', headers: {'Content-Type': 'application/json'}, body:JSON.stringify({'input':userInput})};
     console.log(userInput);
     await fetchWithAuth(endpoint,options);
+    router.replace('/');
 
   }
 
 
   return (
     <View className='flex-1 bg-primary items-center'> 
-        <Image source={images.bg} className='flex-1 absolute w-full z-0' resizeMode='cover'/>
+        <Image source={images.bgg} className='flex-1 absolute w-full z-0' resizeMode='cover'/>
         <View className='flex-row items-center bg-dark-200 rounded-full px-5 py-4 w-[85%] mt-20'>
             
             <TextInput value={userInput}
                        onChangeText={setUserInput} 
                        placeholder='Describe your meal'
-                       placeholderTextColor={'#ab8bff'} 
+                       placeholderTextColor={'darkgrey'} 
                        className='flex-1 ml-2 text-white'/>
             
              
@@ -37,7 +39,7 @@ const QuickTrack = () => {
           {({pressed}) => (
             <Image source={icons.arrow} className='size-5' 
                                         resizeMode='contain' 
-                                        tintColor={(pressed)?('white'):('#ab8bff')} />
+                                        tintColor={(pressed)?('white'):('darkgrey')} />
           )}
         </Pressable>
                

@@ -5,7 +5,7 @@ import * as SecureStore from 'expo-secure-store';
 const router = useRouter();
 
 export const TRACKER_CONFIG = {
-    BASE_URL: 'http://192.168.1.4:8000',
+    BASE_URL: 'http://192.168.1.9:8000',
    /* headers: { 
         accept: "application/json" ,
         Authorization: `Bearer ${getSecureItem()}`
@@ -124,7 +124,7 @@ export const fetchProfile = async () => {
     
 }
 
-export const updateExpenditure = async (expenditure:number) => {
+export const updateExpenditure = async (expenditure:string) => {
   const endpoint = `account/api/profile/update/`;
   const options = {method: 'PATCH', headers: {'Content-Type': 'application/json'},  body: JSON.stringify({expenditure:expenditure})};
   const data = await fetchWithAuth(endpoint,options);

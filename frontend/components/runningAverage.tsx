@@ -3,8 +3,13 @@ import React from 'react'
 
 const RunningAverage = ({date:string , average_calories}: RunningAverageStat) => {
   return (
-    <View>
-      <Text className='text-white'>Average Calories for the past week:{average_calories}</Text>
+    <View className='items-center justify-center gap-5'>
+      <Text className='text-white 
+                       font-bold
+                       text-xl'>Average Calories for the past week:</Text>
+      <Text className='text-white 
+                       font-bold
+                       text-xl'>{average_calories}</Text>
     </View>
   )
 }
