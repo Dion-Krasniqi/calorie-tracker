@@ -6,6 +6,7 @@ import { useRouter } from 'expo-router';
 import LoginPage from '@/components/loginPage';
 import { images } from "@/constants/images";
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { icons } from '@/constants/icons';
 
 
 
@@ -70,7 +71,8 @@ const Login = () => {
     
      <View className='flex-1 bg-primary' style={{alignItems:'center'}}>
      
-      <Image source={images.bg} className="absolute w-full z-0"/>
+      <Image source={images.bgg} className="absolute w-full z-0"/>
+        
         {checkingLogin && <ActivityIndicator size='large' color='#ffffff' />}
         {!checkingLogin && !loggedIn && <LoginPage />}
      </View>

@@ -34,14 +34,14 @@ const Search = () => {
 
   return (
     <SafeAreaProvider>
-    <SafeAreaView className='flex-1 bg-primary '>
+    <SafeAreaView className='flex-1 bg-primary'>
       <Image source={images.bgg} className='flex-1 absolute w-full z-0' resizeMode='cover' />
       <FlatList data={foods} 
                 renderItem={ ({item}) => <FoodCardSearch {...item}/>}
                 keyExtractor={(item) => item.id.toString()} 
-                className='px-3 mt-16'
+                className='px-3 mt-16 '
                 
-                contentContainerStyle={{ paddingBottom: 100,}}
+                contentContainerStyle={{ paddingBottom: 100, }}
                 ListHeaderComponent={
                   <>
                   
@@ -58,7 +58,7 @@ const Search = () => {
                     
                     {//@ts-ignore foods is an array of food
                       !loading && !error && searchQuery.trim() && foods?.length > 0 && (
-                      <Text className='text-xl text-white font-bold'>Search results for{' '}
+                      <Text className='text-xl text-white font-bold mb-4'>Search results for{' '}
                       <Text className='text-blue-100'>{searchQuery}</Text></Text>
                        )}
                   </>
@@ -67,6 +67,7 @@ const Search = () => {
                   (<View className='mt-10 px-5'>
                       <Text className='text-center text-gray-500'>{searchQuery.trim() ? 'No Foods Found' : 'Search For a Food'}</Text>
                     </View>) : null}/>
+            
     </SafeAreaView>
   </SafeAreaProvider>
   )

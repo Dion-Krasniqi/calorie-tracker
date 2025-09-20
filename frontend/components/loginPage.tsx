@@ -1,10 +1,11 @@
-import { View, Text, Button, Image} from 'react-native';
+import { View, Text, Button, Image, TouchableOpacity} from 'react-native';
 import { useEffect, useState } from "react";
 import { TextInput } from 'react-native';
 import { fetchWithAuth, TRACKER_CONFIG } from '@/services/api';
 import { useRouter } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { icons } from '@/constants/icons';
 
 
 
@@ -42,20 +43,33 @@ const LoginPage = () => {
 
   return (
     
-          <View className='flex-1 w-[50%]' style={{justifyContent:'center',}}>
+          <View className='flex-1 w-[50%] ' style={{justifyContent:'center', gap:15}}>
+            <View className='items-center mb-12'>
+              <Image source={icons.logo} className='size-24' />
+            </View>
+                
                 <TextInput value={username} 
                            onChangeText={setUsername} 
-                           placeholderTextColor={'#ab8bff'}
-                           className='text-white'
+                           placeholderTextColor={'darkgrey'}
+                           className='text-white rounded-xl bg-blue-300 border-white/20 border-2 text-center'
                            placeholder='username'/>
                 <TextInput value={password} 
                            onChangeText={setPassword} 
-                           placeholderTextColor={'#ab8bff'}
-                           className='text-white'
+                           placeholderTextColor={'darkgrey'}
+                           className='text-white rounded-xl bg-blue-300 border-white/20 border-2 text-center'
                            placeholder='password'
                            secureTextEntry/>
                 
-                <Button title='Login' onPress={handleSubmit}/>
+                
+                <TouchableOpacity onPress={handleSubmit}>
+                    <View className='flex-row items-center justify-center bg-blue-100 rounded-xl px-5 py-3'>
+                      
+                        
+                            <Text className='font-bold '>LOG IN</Text>
+                        
+                      
+                        </View>
+                    </TouchableOpacity>
           </View>
         
         

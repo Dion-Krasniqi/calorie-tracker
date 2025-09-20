@@ -1,4 +1,4 @@
-import { View, Text, Image, Button } from 'react-native'
+import { View, Text, Image, Button, TouchableOpacity } from 'react-native'
 import React, { useEffect } from 'react'
 import { images } from '@/constants/images'
 import { fetchRunningAverage } from '@/services/api'
@@ -25,7 +25,13 @@ const Stats = () => {
         {avgData? (<View>
                     <RunningAverage {...avgData}/>
                    </View>) : (<Text>No data available</Text>)}
-        <Button title={avgData? 'Re-Calculate' : 'Calculate'} onPress={loadAverage} />
+        <TouchableOpacity className='px-6 py-4 mt-8 justify-center items-center bg-blue-100 rounded-xl' 
+                          onPress={()=>loadAverage()}>
+
+          <Text className=' text-xl font-bold'>{avgData? 'Re-Calculate' : 'Calculate'}</Text>
+
+        </TouchableOpacity>
+        
         
       </View>
       
