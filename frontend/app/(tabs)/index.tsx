@@ -13,6 +13,7 @@ import AddEntry from "@/components/addEntry";
 import IntakeDetail from "@/components/intakeDetail";
 import { SafeAreaFrameContext, SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import MacroChart from "@/components/macroChart";
+import CalorieChart from "@/components/calorieChart";
 
 
 
@@ -22,6 +23,8 @@ export var loggedIn = false;
 export default function Index() {
   
   const router = useRouter();
+
+  const screenWidth = Dimensions.get("window").width;
 
   const {data: logsFood, loading:logsLoading, error:logsError, refetch:loadLogs} = useFetch(() =>fetchLogsCurrent(), false);
   const {data: fetchedProfile, refetch: loadProfile} = useFetch( ()=> fetchProfile(), false);      
@@ -53,10 +56,30 @@ export default function Index() {
             resizeMode="cover"
       />
     
-        <ScrollView className="flex-1 px-5" showsVerticalScrollIndicator={false} 
+        <ScrollView className="flex px-5" showsVerticalScrollIndicator={false} 
         contentContainerStyle={{ minHeight:'100%', paddingBottom:10}}>
-            <View className="items-center bg-blue-100">
-                <MacroChart protein={150} carbs={200} fats={62}/>     
+            <View className="items-center mt-4">
+              
+              {true ? (<ScrollView horizontal
+                          pagingEnabled
+                          showsHorizontalScrollIndicator={false}
+                          style={{width: screenWidth, height: 300}}
+                          >
+                <View style={{width: screenWidth, alignItems:'center' }}> 
+                  <MacroChart protein={150} carbs={300} fats={62}/>
+                </View>
+                <View style={{width: screenWidth, alignItems:'center' }}> 
+                  <CalorieChart calories={1700} expenditure={2600}/>
+                </View>
+                 
+              </ScrollView>):(
+                <View style={{width: screenWidth, alignItems:'center' }}> 
+                  {false ? 
+                          (<MacroChart protein={150} carbs={300} fats={62}/>)
+                         :(<Text className="text-white">Add a Food</Text>)}
+                </View>)}
+              
+                    
             </View>
             <View style={{alignItems:'center'}}>
 
@@ -64,6 +87,7 @@ export default function Index() {
               <View className='w-[75%] mt-12' style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between',}}>
                 <AddEntry buttonText="Add Food" link='/otherPages/search/'/>
                 <AddEntry buttonText="Quick Track" link='/otherPages/quickTrack/'/>
+                
               </View>
               
               <>    
