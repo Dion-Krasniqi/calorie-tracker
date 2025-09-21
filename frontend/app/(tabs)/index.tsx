@@ -55,17 +55,11 @@ export default function Index() {
     
         <ScrollView className="flex-1 px-5" showsVerticalScrollIndicator={false} 
         contentContainerStyle={{ minHeight:'100%', paddingBottom:10}}>
-
-
-            
+            <View className="items-center bg-blue-100">
+                <MacroChart protein={150} carbs={200} fats={62}/>     
+            </View>
             <View style={{alignItems:'center'}}>
-              <View className="flex-1 items-start">
-                <MacroChart protein={150} carbs={200} fats={62}/>
-              </View>
-                
 
-              
-              
               {intakeToday && <IntakeDetail {...intakeToday} />}
               <View className='w-[75%] mt-12' style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between',}}>
                 <AddEntry buttonText="Add Food" link='/otherPages/search/'/>
