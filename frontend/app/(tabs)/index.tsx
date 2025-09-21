@@ -12,6 +12,7 @@ import * as SecureStore from 'expo-secure-store';
 import AddEntry from "@/components/addEntry";
 import IntakeDetail from "@/components/intakeDetail";
 import { SafeAreaFrameContext, SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import MacroChart from "@/components/macroChart";
 
 
 
@@ -58,7 +59,13 @@ export default function Index() {
 
             
             <View style={{alignItems:'center'}}>
-              <Text className="text-white text-9xl">DATA</Text>
+              <View className="flex-1 items-start">
+                <MacroChart protein={150} carbs={200} fats={62}/>
+              </View>
+                
+
+              
+              
               {intakeToday && <IntakeDetail {...intakeToday} />}
               <View className='w-[75%] mt-12' style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between',}}>
                 <AddEntry buttonText="Add Food" link='/otherPages/search/'/>
