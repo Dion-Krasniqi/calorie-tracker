@@ -4,12 +4,14 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db.models import F, Sum
 from django.db.models.functions import TruncDate
 from datetime import date, timedelta
+
+
+
 
 from .forms import LoggedFoodForm
 from .models import LoggedFood, Food
@@ -18,7 +20,6 @@ from .serializers import LoggedFoodSerializer, FoodSerializer
 
 
 # Create your views here.
-
 
 
     
@@ -250,8 +251,8 @@ class GetRunningAverageAPI_view(APIView):
 class ParseFoodView(APIView):
     
     def post(self, request):
+        print(HF_API_KEY)
         food_input = request.data.get('input', '')
-        print(food_input)
         foods = list(Food.objects.values_list('name', flat=True))
         foods_str = ', '.join(foods[:100])
 
@@ -269,10 +270,53 @@ class ParseFoodView(APIView):
         Respond in strict JSON: {{'food':'name', 'quantity':'value', 'brand':'brand_name'*(if available)}}
         
         """
-        client = ()
+        
+        MODEL = "mistralai/Mixtral-8x7B-Instruct-v0.1"
+        API_URL = f"https://api-inference.huggingface.co/models/{MODEL}"
+        output = None
 
-        result = client
+        response = requests.post(
+            f"https://api-inference.huggingface.co/models/{MODEL}",
+            headers={"Authorization": f"Bearer {HF_API_KEY}"},
+            json={"inputs": prompt},
+            timeout=60,
+        )
 
-        return Response(result)
+        import os
+import json
+import requests
+import time
+import logging
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .models import Food
+
+logger = logging.getLogger(__name__)
+HF_API_KEY = os.getenv("HF_API_KEY")  # set this in your environment
+
+class ParseFoodView(APIView):
+    def post(self, request):
+        food_input = request.data.get('input', '')
+        foods = list(Food.objects.values_list('name', flat=True))
+        foods_str = ', '.join(foods[:100])
+
+        prompt = f"""
+        You are a food parser.
+        Users will enter text like "apple 300g" or "2 medium eggs".
+
+        All the available foods: {foods_str}
+
+        Extract:
+        - 'food': the closest match from the available foods list
+        - 'brand': if included, find the closest match, else null
+        - 'quantity': numeric quantity in grams (make conversions / best guess)
+
+        Input: '{food_input}'
+        Respond in strict JSON: {{"food":"name","quantity":value,"brand":"brand_name" (or null)}}
+        """
+
+        
+
+        
 
         
