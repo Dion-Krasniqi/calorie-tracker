@@ -10,7 +10,7 @@ from django.db.models import F, Sum
 from django.db.models.functions import TruncDate
 from datetime import date, timedelta
 
-
+import os
 
 
 from .forms import LoggedFoodForm
@@ -21,7 +21,7 @@ from .serializers import LoggedFoodSerializer, FoodSerializer
 
 # Create your views here.
 
-
+ 
     
 class LogFoodAPI_view(generics.CreateAPIView): # Logging food
     queryset = Food.objects.all()
@@ -248,51 +248,6 @@ class GetRunningAverageAPI_view(APIView):
         return Response(response_data, status=status.HTTP_200_OK)
     
 
-class ParseFoodView(APIView):
-    
-    def post(self, request):
-        print(HF_API_KEY)
-        food_input = request.data.get('input', '')
-        foods = list(Food.objects.values_list('name', flat=True))
-        foods_str = ', '.join(foods[:100])
-
-        prompt = f"""
-        You are a food parser.
-        Users will enter text like "apple 300g" or "2 medium eggs"
-
-        All the available foods: {foods_str}
-        Extract: 
-        -'food': the closest match from the available foods list
-        -'brand': if it is included check if you can find the closest match, if not find an entry with null brand or a generic one
-        -'quantity': numeric quantity in grams, make conversions if neccessary and if no unit included but something more vague make a very good prediction, ex. "one protein bar" and lets say protein bars range from 40-80 grams, make a very good guess in the given range
-
-        Input: '{food_input}'
-        Respond in strict JSON: {{'food':'name', 'quantity':'value', 'brand':'brand_name'*(if available)}}
-        
-        """
-        
-        MODEL = "mistralai/Mixtral-8x7B-Instruct-v0.1"
-        API_URL = f"https://api-inference.huggingface.co/models/{MODEL}"
-        output = None
-
-        response = requests.post(
-            f"https://api-inference.huggingface.co/models/{MODEL}",
-            headers={"Authorization": f"Bearer {HF_API_KEY}"},
-            json={"inputs": prompt},
-            timeout=60,
-        )
-
-        import os
-import json
-import requests
-import time
-import logging
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from .models import Food
-
-logger = logging.getLogger(__name__)
-HF_API_KEY = os.getenv("HF_API_KEY")  # set this in your environment
 
 class ParseFoodView(APIView):
     def post(self, request):
@@ -315,7 +270,8 @@ class ParseFoodView(APIView):
         Respond in strict JSON: {{"food":"name","quantity":value,"brand":"brand_name" (or null)}}
         """
 
-        
+        print(food_input)
+        return Response(food_input)
 
         
 
