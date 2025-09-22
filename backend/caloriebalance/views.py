@@ -128,23 +128,20 @@ class GetDailyIntakeAPI_view(APIView):
         
         daily_log = LoggedFood.objects.filter(user=request.user, date_consumed=requested_date)
 
-        total_calories = daily_log.aggregate(Sum('calories_consumed'))['calories_consumed__sum'] or 0
-        total_macros = {
-            'protein':sum((loggedFood.quantity/100)*loggedFood.food.protein for loggedFood in daily_log),
-            'carbohydrates':sum((loggedFood.quantity/100)*loggedFood.food.carbohydrates for loggedFood in daily_log),
-            'fats':sum((loggedFood.quantity/100)*loggedFood.food.fats for loggedFood in daily_log)}
-         
-        response_data = {
-            'total_calories':round(total_calories, 2),
-            'protein': round(float(total_macros['protein']), 2),
-            'carbohydrates': round(float(total_macros['carbohydrates']), 2),
-            'fats': round(float(total_macros['fats']), 2),
-        }
+        response_data = { 'total_calories' : 0, 'total_protein' : 0, 'total_carbohydrates' : 0, 'total_fats' : 0 }
+        
+        for log in daily_log:
+            response_data['total_calories'] += log.calories_consumed
+            response_data['total_protein'] += log.food.protein * log.quantity/100
+            response_data['total_carbohydrates'] += log.food.carbohydrates * log.quantity/100
+            response_data['total_fats'] += log.food.fats * log.quantity/100
+
+        response_data['total_protein'] = round(response_data['total_protein'],2)
+        response_data['total_carbohydrates'] = round(response_data['total_carbohydrates'],2)
+        response_data['total_fats'] = round(response_data['total_fats'],2)
         expenditure = request.user.expenditure   
         if expenditure is not None:
             if expenditure > 0:
-                remaining_calories = expenditure - total_calories
-                response_data['remaining_calories']=round(remaining_calories,2)
                 response_data['expenditure'] = expenditure
 
         return Response(response_data, status=status.HTTP_200_OK)

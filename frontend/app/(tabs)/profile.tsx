@@ -9,6 +9,7 @@ import * as SecureStore from 'expo-secure-store';
 import { useRouter } from 'expo-router';
 
 
+
 const Profile = () => {
   
   const router = useRouter();
@@ -46,8 +47,8 @@ const Profile = () => {
       console.log('ugh');
       //@ts-ignore , gets parsed as string in json
       await updateExpenditure(expenditure);
-      
       loadProfile();
+      // Figure out how to update index so changes reflected
      
     } catch (error){
       throw(error);

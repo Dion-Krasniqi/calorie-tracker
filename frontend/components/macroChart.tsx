@@ -46,7 +46,7 @@ const MacroChart = ({protein, carbs, fats}) => {
                   
                   width={chartWidth*2}
                   isAnimated
-                     
+                  maxValue={total*1.02}
                   
                   
                   barWidth={chartWidth*2*.25}
@@ -66,9 +66,10 @@ const MacroChart = ({protein, carbs, fats}) => {
 
                   
                   showValuesAsTopLabel
-                  topLabelTextStyle={{color: "white", fontSize: 11, textAlign: "center",}}/>
+                  topLabelTextStyle={{color: "white", fontSize: 13, textAlign: "center",}}/>
     </View>
   )
 }
 
 export default MacroChart
+

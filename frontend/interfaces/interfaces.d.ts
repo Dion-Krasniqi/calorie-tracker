@@ -39,10 +39,9 @@ interface RunningAverageStat {
 
 interface IntakeCurrent {
     total_calories: number;
-    protein: number;
-    carbohydrates: number;
-    fats: number;
-    remaining_calories?:number;
+    total_protein: number;
+    total_carbohydrates: number;
+    total_fats: number;
     expenditure?:number;
 }
 
