@@ -41,7 +41,7 @@ const MacroChart = ({protein, carbs, fats}) => {
   
    
    return (
-    <View style={{  width: chartWidth*2, alignContent: "center"}}>
+    <View  style={{  width: chartWidth*2, alignContent: "center"}}>
         <BarChart data={data}
                   
                   width={chartWidth*2}

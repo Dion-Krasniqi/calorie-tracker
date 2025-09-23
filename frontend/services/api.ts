@@ -67,7 +67,7 @@ export const customGetFetch = async<T> (endpoint: string): Promise<T> => {
 export const fetchFoods = async ({ query } : { query : string}) => {
   //Have to add brand here aswell
     const endpoint = query ? `caloriebalance/api/foodsearch/?name=${encodeURIComponent(query)}`
-    :`caloriebalance/api/foodlist/`;
+    :`caloriebalance/api/recentfoods/`;
     const data = await customGetFetch<Array<Food>>(endpoint);
 
     return data;

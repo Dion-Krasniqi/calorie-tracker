@@ -61,7 +61,7 @@ class LoggedFoodDetailAPI_view(generics.RetrieveUpdateDestroyAPIView): # Single 
     
     
 class LoggedFoodListAPI_view(generics.ListAPIView): # All logged foods
-    queryset = LoggedFood.objects.all() #filter(date_consumed = date.today())
+    queryset = LoggedFood.objects.all() 
     serializer_class = LoggedFoodSerializer
 
     permission_classes = [IsAuthenticated]
@@ -80,10 +80,52 @@ class DailyLoggedFoodAPI_view(generics.ListAPIView): # Current Day foods
     
 
 class FoodListAPI_view(generics.ListAPIView): # All foods in the database
-    queryset = Food.objects.all()
+    queryset = Food.objects.all().order_by('name')
     serializer_class = FoodSerializer
 
     permission_classes = [IsAuthenticated]
+
+class RecentFoodListAPI_view(generics.ListAPIView):
+
+    permission_classes = [IsAuthenticated]
+    serializer_class = FoodSerializer
+ 
+
+    def get_queryset(self):
+        
+        #logged_recent = LoggedFood.objects.filter(user=self.request.user).order_by('-date_consumed', '-id')[:10]
+        #food_ids = [log.food.id for log in logged_recent]
+        #queryset = Food.objects.filter(id__in=food_ids)
+
+        #queryset = sorted(queryset, key=lambda f: food_ids.index(f.id))
+        queryset = Food.objects.all().order_by('name')[:2]
+        return queryset
+
+#class OLDFoodSearchAPI_view(generics.ListAPIView):
+#
+#    permission_classes = [IsAuthenticated]
+#    serializer_class = FoodSerializer
+#
+#    def get(self, request, *args, **kwargs):
+#        food_name = request.query_params.get('name', None)
+#        food_brand = request.query_params.get('brand', None)
+#        if food_name is None and food_brand is None:
+#            return Response({"error":"You must enter the name or brand of the food"}, status=status.HTTP_400_BAD_REQUEST) 
+#
+#        return super().get(request, *args, **kwargs)   
+#
+#    def get_queryset(self):
+#        recentset = LoggedFood.objects.filter(user=self.request.user).order_by('date_consumed')[:1]
+#        print(recentset)
+#        queryset = Food.objects.all()
+#        food_name = self.request.query_params.get('name',None)
+#        food_brand = self.request.query_params.get('brand',None)
+#        if food_name:
+#            queryset = queryset.filter(name__icontains=food_name)
+#        if food_brand:
+#            queryset = queryset.filter(brand__icontains=food_brand) 
+#
+#       return queryset.order_by('name')
 
 class FoodSearchAPI_view(generics.ListAPIView):
 
@@ -99,14 +141,14 @@ class FoodSearchAPI_view(generics.ListAPIView):
         return super().get(request, *args, **kwargs)   
 
     def get_queryset(self):
-
-        queryset = Food.objects.all()
+        
+        
         food_name = self.request.query_params.get('name',None)
         food_brand = self.request.query_params.get('brand',None)
         if food_name:
-            queryset = queryset.filter(name__icontains=food_name)
+            queryset = Food.objects.filter(name__icontains=food_name)
         if food_brand:
-            queryset = queryset.filter(brand__icontains=food_brand) 
+            queryset = Food.objects.filter(brand__icontains=food_brand) if not queryset else queryset.objects.filter(brand__icontains=food_brand)
 
         return queryset
     

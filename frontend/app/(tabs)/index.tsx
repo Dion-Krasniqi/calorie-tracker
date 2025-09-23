@@ -60,7 +60,7 @@ export default function Index() {
         <ScrollView className="flex px-5" showsVerticalScrollIndicator={false} 
         contentContainerStyle={{ minHeight:'100%', paddingBottom:10}}>
 
-            <View className="items-center mt-4" style={{height:300}}>
+            <View className="items-center mt-4 rounded"   style={{height:300}}>
               {/*@ts-ignore */}
               {intakeToday  && intakeToday.expenditure ?
                 (<ScrollView horizontal
@@ -76,13 +76,17 @@ export default function Index() {
                                 carbs={intakeToday.total_carbohydrates} 
                                 fats={intakeToday.total_fats}/>
                   </View>
+                  
                  </ScrollView>):
                 (<View style={{width: screenWidth, alignItems:'center' }}> 
                     <MacroChart protein={intakeToday?.total_protein} 
                                 carbs={intakeToday?.total_carbohydrates} 
-                                fats={intakeToday?.total_fats}/>
-                    <Text className="text-white font-medium mt-4">Calories Consumed: {intakeToday?.total_calories}</Text>
+                                fats={intakeToday?.total_fats} />
+                    
+                      <Text className="flex w-[600] text-white font-medium mt-4 pt-2 pb-2 text-center bg-blue-200">Calories Consumed: {intakeToday?.total_calories}</Text>
+                      
                   </View>)
+                  
                  // :(<View className="flex-1 justify-center"><Text className="text-white font-semibold text-4xl">Add a Food</Text></View>)
                   
                   }
@@ -95,7 +99,7 @@ export default function Index() {
             <View style={{alignItems:'center'}}>
               <View className='w-[75%] mt-2' style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between',}}>
                 <AddEntry buttonText="Add Food" link='/otherPages/search/'/>
-                <AddEntry buttonText="Quick Track" link='/otherPages/quickTrack/'/>
+                <AddEntry buttonText="Quick Track" link=''/>
                 
               </View>
               
