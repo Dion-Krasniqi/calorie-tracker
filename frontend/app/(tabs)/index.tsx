@@ -13,6 +13,7 @@ import IntakeDetail from "@/components/intakeDetail";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import MacroChart from "@/components/macroChart";
 import CalorieChart from "@/components/calorieChart";
+import { Alert, BackHandler } from 'react-native';
 
 
 
@@ -24,7 +25,36 @@ export default function Index() {
   const router = useRouter();
 
   const screenWidth = Dimensions.get("window").width;
+  {/* need to just limit to smthing
+  useEffect(() => {
+  const onBackPress = () => {
+    Alert.alert(
+      'Exit App',
+      'Do you want to exit?',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => {
+            // Do nothing
+          },
+          style: 'cancel',
+        },
+        { text: 'YES', onPress: () => BackHandler.exitApp() },
+      ],
+      { cancelable: false }
+    );
 
+    return true;
+  };
+
+  const backHandler = BackHandler.addEventListener(
+    'hardwareBackPress',
+    onBackPress
+  );
+
+  return () => backHandler.remove();
+}, []);
+ */}
   const {data: logsFood, loading:logsLoading, error:logsError, refetch:loadLogs} = useFetch(() =>fetchLogsCurrent(), false);
   const {data: fetchedProfile, refetch: loadProfile} = useFetch( ()=> fetchProfile(), false);      
   const {data: intakeToday, refetch: loadIntake} = useFetch( ()=> fetchIntakeCurrent(), false);  
