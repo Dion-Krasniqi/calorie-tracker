@@ -1,12 +1,13 @@
-import { View, Text, ActivityIndicator, Image } from 'react-native'
+import { View, Text, ActivityIndicator, Image, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import * as SecureStore from 'expo-secure-store';
 import { TRACKER_CONFIG } from '@/services/api';
-import { useRouter } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import LoginPage from '@/components/loginPage';
 import { images } from "@/constants/images";
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { icons } from '@/constants/icons';
+import RegisterPage from '@/components/register';
 
 
 
@@ -47,6 +48,7 @@ const Login = () => {
     const router = useRouter();
     const [checkingLogin, setCheckingLogin] = useState(true);
     const [loggedIn, setLoggedIn] = useState(false);
+    const [hasAccount, setHasAccount] = useState('');
 
     useEffect(()=>{
         const tryLogin = async () => {
@@ -74,7 +76,13 @@ const Login = () => {
       <Image source={images.bgg} className="absolute w-full z-0"/>
         
         {checkingLogin && <ActivityIndicator size='large' color='#ffffff' />}
-        {!checkingLogin && !loggedIn && <LoginPage />}
+        {!checkingLogin && !loggedIn && hasAccount=='' ? (((<View>
+            <TouchableOpacity onPress={()=>setHasAccount('Login')} >Log In</TouchableOpacity>
+            <TouchableOpacity onPress={()=>setHasAccount('Register')} >Create Account</TouchableOpacity>
+        </View>))):(<View>
+            {hasAccount=='Login' && (<LoginPage/>)}
+            {hasAccount=='Register' && (<RegisterPage/>)}
+        </View>) }
      </View>
      
     )
