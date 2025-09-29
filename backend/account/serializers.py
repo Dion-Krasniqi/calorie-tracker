@@ -22,7 +22,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
-        fields = ('id', 'username', 'password1', 'password2')
+        fields = ('id', 'username', 'password1', 'password2','expenditure')
         extra_kawrgs = {'password':{'write_only' : True}}
 
 

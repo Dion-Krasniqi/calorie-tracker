@@ -19,7 +19,13 @@ const AddEntry = ({buttonText, link}: Props) => {
     <View className='flex-row items-center bg-blue-100 rounded-xl px-5 py-4'>
       
         
-            <Text className='font-[500]'>{buttonText}</Text>
+            
+            {buttonText=='Quick Track' ? (<View className='items-center '>
+              <Text className='font-[500] '>{buttonText}</Text>
+              <Text className='font-[5] text-xs absolute pt-5'>Coming Soon</Text>
+              
+            </View>):
+            (<Text className='font-[500]'>{buttonText}</Text>)}
         
       
         </View>

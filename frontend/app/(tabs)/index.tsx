@@ -129,7 +129,7 @@ export default function Index() {
             <View style={{alignItems:'center'}}>
               <View className='w-[75%] mt-2' style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between',}}>
                 <AddEntry buttonText="Add Food" link='/otherPages/search/'/>
-                <AddEntry buttonText="Quick Track" link=''/>
+                <AddEntry buttonText="Quick Track" link='' />
                 
               </View>
               

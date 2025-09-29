@@ -1,4 +1,4 @@
-import { View, Text, Button, Image, TouchableOpacity} from 'react-native';
+import { View, Text, Button, Image, TouchableOpacity, Dimensions} from 'react-native';
 import { useEffect, useState } from "react";
 import { TextInput } from 'react-native';
 import { fetchWithAuth, TRACKER_CONFIG } from '@/services/api';
@@ -16,7 +16,7 @@ const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
-
+  const screenWidth = Dimensions.get("window").width;
   const handleSubmit = async () => {
       if (isLoading) {
         return
@@ -43,7 +43,7 @@ const LoginPage = () => {
 
   return (
     
-          <View className='flex-1 w-[50%] ' style={{justifyContent:'center', gap:15}}>
+          <View className='flex-1 w-[80%] ' style={{justifyContent:'center', gap:15}}>
             <View className='items-center mb-12'>
               <Image source={icons.logo} className='size-24' />
             </View>
@@ -52,6 +52,7 @@ const LoginPage = () => {
                            onChangeText={setUsername} 
                            placeholderTextColor={'darkgrey'}
                            className='text-white rounded-xl bg-blue-300 border-white/20 border-2 text-center'
+                           style={{width:screenWidth/2.3}}
                            placeholder='username'/>
                 <TextInput value={password} 
                            onChangeText={setPassword} 
@@ -68,6 +69,11 @@ const LoginPage = () => {
                             <Text className='font-bold '>LOG IN</Text>
                         
                       
+                        </View>
+                    </TouchableOpacity>
+                  <TouchableOpacity onPress={()=>router.push('/login')}>
+                    <View className='items-center justify-center  rounded-xl px-1 py-1 opacity-60'>
+                            <Text className='font-semibold text-white'>Go back</Text>
                         </View>
                     </TouchableOpacity>
           </View>

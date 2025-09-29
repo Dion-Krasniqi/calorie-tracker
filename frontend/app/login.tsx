@@ -70,20 +70,24 @@ const Login = () => {
 
     
     return (
-    
-     <View className='flex-1 bg-primary' style={{alignItems:'center'}}>
+    <SafeAreaProvider >
+     <SafeAreaView className='flex-1 bg-primary' style={{alignItems:'center'}}>
      
       <Image source={images.bgg} className="absolute w-full z-0"/>
         
         {checkingLogin && <ActivityIndicator size='large' color='#ffffff' />}
-        {!checkingLogin && !loggedIn && hasAccount=='' ? (((<View>
-            <TouchableOpacity onPress={()=>setHasAccount('Login')} >Log In</TouchableOpacity>
-            <TouchableOpacity onPress={()=>setHasAccount('Register')} >Create Account</TouchableOpacity>
+        {!checkingLogin && !loggedIn && hasAccount=='' ? (((<View className='flex-1 items-center justify-center gap-5'>
+            <TouchableOpacity onPress={()=>setHasAccount('Login')} >
+                <Text className='text-white font-bold text-3xl'>Log In</Text></TouchableOpacity>
+            <Text className='text-white text-md'>Or</Text>
+            <TouchableOpacity onPress={()=>setHasAccount('Register')} >
+                <Text className='text-white font-bold text-3xl'>Create Account</Text></TouchableOpacity>
         </View>))):(<View>
             {hasAccount=='Login' && (<LoginPage/>)}
             {hasAccount=='Register' && (<RegisterPage/>)}
         </View>) }
-     </View>
+     </SafeAreaView>
+    </SafeAreaProvider>
      
     )
     

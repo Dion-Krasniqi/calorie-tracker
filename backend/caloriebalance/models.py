@@ -12,6 +12,7 @@ class Food(models.Model):
     protein = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
     carbohydrates = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
     fats = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
+    time_tracked = models.IntegerField(max_digits=8,blank=True, null=True)
 
     def __str__(self):
         return f"{self.name} : {self.calories}kcal"
@@ -26,7 +27,7 @@ class LoggedFood(models.Model):
 
     food = models.ForeignKey(Food, on_delete=models.CASCADE)
 
-    quantity = models.DecimalField(max_digits=7, decimal_places=2) # in grams
+    quantity = models.DecimalField(max_digits=10, decimal_places=2) # in grams
     date_consumed = models.DateField(auto_now_add=False, auto_now=False)
     calories_consumed = models.DecimalField(max_digits=9, decimal_places=2)
     # def calculate_calories(self):
