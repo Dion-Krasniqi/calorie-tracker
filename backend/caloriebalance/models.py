@@ -12,7 +12,8 @@ class Food(models.Model):
     protein = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
     carbohydrates = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
     fats = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
-    time_tracked = models.IntegerField(max_digits=8,blank=True, null=True)
+    time_tracked = models.IntegerField(default=0)
+    last_tracked = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
         return f"{self.name} : {self.calories}kcal"

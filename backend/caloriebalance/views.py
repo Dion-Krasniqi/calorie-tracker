@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import F, Sum
 from django.db.models.functions import TruncDate
 from datetime import date, timedelta
+from django.utils import timezone
 
 import os
 
@@ -30,6 +31,10 @@ class LogFoodAPI_view(generics.CreateAPIView): # Logging food
     
     def perform_create(self, serializer):
         food_instance = serializer.validated_data.get('food')
+
+        food_instance.times_tracked += 1
+        food_instance.last_tracked = timezone.now()
+        food_instance.save(update_fields=['times_tracked','last_tracked'])
         quantity = serializer.validated_data.get('quantity')
         print(food_instance)
 
@@ -98,7 +103,7 @@ class RecentFoodListAPI_view(generics.ListAPIView):
         #queryset = Food.objects.filter(id__in=food_ids)
 
         #queryset = sorted(queryset, key=lambda f: food_ids.index(f.id))
-        queryset = Food.objects.all().order_by('name')[:2]
+        queryset = Food.objects.all().order_by('-last_tracked')[:2]
         return queryset
 
 #class OLDFoodSearchAPI_view(generics.ListAPIView):
