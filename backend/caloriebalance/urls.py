@@ -12,6 +12,7 @@ urlpatterns = [
 
     path('api/foodlist/', views.FoodListAPI_view.as_view(), name="api_food_list"),
     path('api/foodsearch/', views.FoodSearchAPI_view.as_view(), name="api_food_search"),
+    path('api/frequentfoods/', views.MostFrequentFoodListAPI_view.as_view(), name="api_food_frequent"),
     path('api/recentfoods/', views.RecentFoodListAPI_view.as_view(), name="api_food_recents"),
     path('api/fooddetail/<int:pk>/', views.FoodDetailAPI_view.as_view(), name="api_food_detail"),
     

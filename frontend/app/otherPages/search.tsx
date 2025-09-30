@@ -1,4 +1,4 @@
-import { ActivityIndicator, FlatList, Image, Text, View } from 'react-native'
+import { ActivityIndicator, FlatList, Image, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { images } from '@/constants/images'
 //import FoodCard from '@/components/foodCard'
@@ -14,6 +14,7 @@ const Search = () => {
   
 
   const [searchQuery, setSearchQuery] = useState('');
+  const [mostRecent, setMostRecent] = useState(true);
 
   const {data: foods, loading, error, refetch: loadFoods, reset} = useFetch(() => fetchFoods({ query:  searchQuery }), false);
 
@@ -49,6 +50,11 @@ const Search = () => {
                     <SearchBar placeholder='Search foods...'
                                value={searchQuery}
                                onChangeText={(text: string) => setSearchQuery(text)} />
+                    <View>
+                      <TouchableOpacity onPress={()=>setMostRecent(!mostRecent)}>
+                        <Text className='text-white'>{mostRecent ? ('Recent'):('Frequent')}</Text>
+                      </TouchableOpacity>
+                    </View>
                   </View>
                   {loading && 
                     (<ActivityIndicator size='large' color='#ffffff' className='my-3'/>)}

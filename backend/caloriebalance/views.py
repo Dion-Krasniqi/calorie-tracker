@@ -103,9 +103,20 @@ class RecentFoodListAPI_view(generics.ListAPIView):
         #queryset = Food.objects.filter(id__in=food_ids)
 
         #queryset = sorted(queryset, key=lambda f: food_ids.index(f.id))
-        queryset = Food.objects.all().order_by('-last_tracked')[:2]
+        queryset = Food.objects.all().order_by('-last_tracked').distinct('name')[:2]
         return queryset
 
+class MostFrequentFoodListAPI_view(generics.ListAPIView):
+
+    permission_classes = [IsAuthenticated]
+    serializer_class = FoodSerializer
+ 
+
+    def get_queryset(self):
+
+        queryset = Food.objects.all().order_by('-time_tracked').distinct('name')[:2]
+        return queryset
+    
 #class OLDFoodSearchAPI_view(generics.ListAPIView):
 #
 #    permission_classes = [IsAuthenticated]
