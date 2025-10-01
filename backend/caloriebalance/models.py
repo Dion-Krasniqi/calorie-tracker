@@ -5,9 +5,8 @@ from django.conf import settings
 
 class Food(models.Model):
     
-    name = models.CharField(max_length=200, unique=True, db_index=True)
-    brand = models.CharField(max_length=100, blank=True, null=True)
-
+    name = models.CharField(max_length=200, db_index=True)
+    usda_id = models.BigIntegerField(unique=True, blank=True, null=True)
     calories = models.DecimalField(max_digits=7, decimal_places=2) # 99999.99
     protein = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
     carbohydrates = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)

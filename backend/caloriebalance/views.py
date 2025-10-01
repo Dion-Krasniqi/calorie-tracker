@@ -150,9 +150,8 @@ class FoodSearchAPI_view(generics.ListAPIView):
 
     def get(self, request, *args, **kwargs):
         food_name = request.query_params.get('name', None)
-        food_brand = request.query_params.get('brand', None)
-        if food_name is None and food_brand is None:
-            return Response({"error":"You must enter the name or brand of the food"}, status=status.HTTP_400_BAD_REQUEST) 
+        if food_name is None:
+            return Response({"error":"You must enter the name of the food"}, status=status.HTTP_400_BAD_REQUEST) 
 
         return super().get(request, *args, **kwargs)   
 
@@ -160,11 +159,9 @@ class FoodSearchAPI_view(generics.ListAPIView):
         
         
         food_name = self.request.query_params.get('name',None)
-        food_brand = self.request.query_params.get('brand',None)
-        if food_name:
+        if food_name.trim():
             queryset = Food.objects.filter(name__icontains=food_name)
-        if food_brand:
-            queryset = Food.objects.filter(brand__icontains=food_brand) if not queryset else queryset.objects.filter(brand__icontains=food_brand)
+        
 
         return queryset
     
