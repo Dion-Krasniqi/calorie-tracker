@@ -32,9 +32,9 @@ class LogFoodAPI_view(generics.CreateAPIView): # Logging food
     def perform_create(self, serializer):
         food_instance = serializer.validated_data.get('food')
 
-        food_instance.times_tracked += 1
+        food_instance.time_tracked += 1
         food_instance.last_tracked = timezone.now()
-        food_instance.save(update_fields=['times_tracked','last_tracked'])
+        food_instance.save(update_fields=['time_tracked','last_tracked'])
         quantity = serializer.validated_data.get('quantity')
         print(food_instance)
 
@@ -103,7 +103,7 @@ class RecentFoodListAPI_view(generics.ListAPIView):
         #queryset = Food.objects.filter(id__in=food_ids)
 
         #queryset = sorted(queryset, key=lambda f: food_ids.index(f.id))
-        queryset = Food.objects.all().order_by('-last_tracked').distinct('name')[:2]
+        queryset = Food.objects.all().order_by('last_tracked')
         return queryset
 
 class MostFrequentFoodListAPI_view(generics.ListAPIView):
@@ -114,7 +114,7 @@ class MostFrequentFoodListAPI_view(generics.ListAPIView):
 
     def get_queryset(self):
 
-        queryset = Food.objects.all().order_by('-time_tracked').distinct('name')[:2]
+        queryset = Food.objects.all().order_by('-time_tracked')[:2]
         return queryset
     
 #class OLDFoodSearchAPI_view(generics.ListAPIView):
@@ -159,7 +159,7 @@ class FoodSearchAPI_view(generics.ListAPIView):
         
         
         food_name = self.request.query_params.get('name',None)
-        if food_name.trim():
+        if food_name:
             queryset = Food.objects.filter(name__icontains=food_name)
         
 
