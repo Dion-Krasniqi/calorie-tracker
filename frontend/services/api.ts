@@ -59,7 +59,30 @@ export const customGetFetch = async<T> (endpoint: string): Promise<T> => {
 
 
 }
+export const logFood = async ({foodId,quantity}:{foodId:number,quantity:number})=>{
+  try {
+        const endpoint = `${TRACKER_CONFIG.BASE_URL}/caloriebalance/api/add/`;
+        const token = await SecureStore.getItemAsync('accessToken');
+        const response = await fetch(endpoint,{
+          method: 'POST',
+          headers: {
+                  'Content-Type': 'application/json',
+                  Accept: 'application/json',
+                  Authorization: `Bearer ${token}`,
+                },
+          body: JSON.stringify({food:foodId, quantity: quantity})
+        })
+        if (!response.ok){
+          throw new Error('Failed to add food');
+        }
+        const data = response.json();
+        return data;
+          
+      }catch (error) {
+        throw (error)
+      } 
 
+}
 
 
 

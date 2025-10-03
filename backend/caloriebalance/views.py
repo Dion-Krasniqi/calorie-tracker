@@ -41,6 +41,7 @@ class LogFoodAPI_view(generics.CreateAPIView): # Logging food
         calories_consumed = (quantity/100) * food_instance.calories
 
         serializer.save(user=self.request.user, calories_consumed=calories_consumed)
+        return {calories_consumed}
 
 #class DeleteLogAPI_view(generics.DestroyAPIView):
 #    queryset = LoggedFood.objects.all()

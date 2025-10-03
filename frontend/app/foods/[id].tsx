@@ -6,6 +6,7 @@ import { fetchFoodDetails, TRACKER_CONFIG } from '@/services/api';
 import * as SecureStore from 'expo-secure-store';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { images } from '@/constants/images';
+import { useLogStore } from '@/state/keepState';
 
 const FoodDetails = () => {
 
@@ -14,6 +15,9 @@ const FoodDetails = () => {
   const { data: food, loading, refetch } = useFetch (() => fetchFoodDetails(id as string));
   const [quantity, setQuantity] = useState(100);
   const [isLoading, setIsLoading] = useState(false);
+
+  const addLog = useLogStore((state)=>state.logFood);
+
 
   useEffect(() =>{
         refetch();
@@ -26,21 +30,9 @@ const FoodDetails = () => {
     }
     try {
       setIsLoading(true);
-      const endpoint = `${TRACKER_CONFIG.BASE_URL}/caloriebalance/api/add/`;
-      const token = await SecureStore.getItemAsync('accessToken');
-      console.log(id)
-      const response = await fetch(endpoint,{
-        method: 'POST',
-        headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-                Authorization: `Bearer ${token}`,
-              },
-        body: JSON.stringify({food:id, quantity: quantity})
-      })
-      if (!response.ok){
-        throw new Error('Failed to add food');
-      }
+      await addLog(Number(id),quantity);
+      
+      
         
     }catch (error) {
       throw (error)
