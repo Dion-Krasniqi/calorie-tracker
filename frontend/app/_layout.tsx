@@ -1,7 +1,14 @@
 import { Stack } from "expo-router";
 import './globals.css';
+import { useLogStore } from "@/state/keepState";
+import { useEffect } from "react";
 
 export default function RootLayout() {
+  const loadLogs = useLogStore((state)=>state.loadFoodLogs);
+  useEffect(()=>{
+    loadLogs();
+
+  },[])
   return <Stack>
     <Stack.Screen
       name="login"

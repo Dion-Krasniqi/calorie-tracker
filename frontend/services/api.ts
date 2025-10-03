@@ -86,7 +86,8 @@ export const fetchFoodDetails = async (foodId: string) : Promise<Food> => {
 
 export const fetchLogs = async() => {
   const endpoint = `caloriebalance/api/logs/`;
-  const data = await customGetFetch<LoggedFood>(endpoint);
+  //const data = await customGetFetch<LoggedFood>(endpoint);
+  const data = await customGetFetch<LoggedFood[]>(endpoint);
 
   return data;
 

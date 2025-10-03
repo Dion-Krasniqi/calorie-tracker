@@ -14,6 +14,7 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import MacroChart from "@/components/macroChart";
 import CalorieChart from "@/components/calorieChart";
 import { Alert, BackHandler } from 'react-native';
+import { useLogStore } from "@/state/keepState";
 
 
 
@@ -55,20 +56,21 @@ export default function Index() {
   return () => backHandler.remove();
 }, []);
  */}
-  const {data: logsFood, loading:logsLoading, error:logsError, refetch:loadLogs} = useFetch(() =>fetchLogsCurrent(), false);
+  //const {data: logsFood, loading:logsLoading, error:logsError, refetch:loadLogs} = useFetch(() =>fetchLogsCurrent(), false);
   const {data: fetchedProfile, refetch: loadProfile} = useFetch( ()=> fetchProfile(), false);      
   const {data: intakeToday, refetch: loadIntake} = useFetch( ()=> fetchIntakeCurrent(), false);  
-
+  
+  const logs = useLogStore((state)=>state.foodlogs);
 
   const updateView = () => {
       loadIntake();
-      loadLogs();
+      //loadLogs();
   }
   
 
   
   useEffect(()=>{
-    loadLogs();
+    //loadLogs();
     loadIntake();
     
   }, [])
@@ -135,7 +137,7 @@ export default function Index() {
               
               <>    
                     
-                    <FlatList data={logsFood} 
+                    <FlatList data={logs} 
                               renderItem={({item}) => (<LoggedFoodCard {...item} updateView={updateView}/>)}
                               keyExtractor={(item) =>item.id.toString()}
                               /*columnWrapperStyle={{justifyContent:'flex-start', gap:20, paddingRight:5, marginBottom:10}}*/
