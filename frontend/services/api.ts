@@ -59,6 +59,7 @@ export const customGetFetch = async<T> (endpoint: string): Promise<T> => {
 
 
 }
+
 export const logFood = async ({foodId,quantity}:{foodId:number,quantity:number})=>{
   try {
         const endpoint = `${TRACKER_CONFIG.BASE_URL}/caloriebalance/api/add/`;
@@ -75,8 +76,6 @@ export const logFood = async ({foodId,quantity}:{foodId:number,quantity:number})
         if (!response.ok){
           throw new Error('Failed to add food');
         }
-        console.log(response?.foodinstance);
-        //return {id,food,quantity,date_consumed,calories_consumed}:{LoggedFood}
           
       }catch (error) {
         throw (error)
@@ -134,7 +133,7 @@ export const fetchLogDetails = async (logId: string) : Promise<LoggedFood> => {
 
 }
 
-export const deleteLogDetails = async (logId: string) => {
+export const deleteLogDetails = async (logId: number) => {
   const endpoint = `caloriebalance/api/logs/${logId}/`;
   const response = await fetchWithAuth(endpoint,{method: 'DELETE'},false);
   

@@ -2,7 +2,7 @@ import { View, Text, ScrollView, TextInput, Button, Image, TouchableOpacity } fr
 import React, { useEffect, useState } from 'react'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import useFetch from '@/services/useFetch';
-import { fetchFoodDetails, TRACKER_CONFIG } from '@/services/api';
+import { fetchFoodDetails, logFood, TRACKER_CONFIG } from '@/services/api';
 import * as SecureStore from 'expo-secure-store';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { images } from '@/constants/images';
@@ -16,7 +16,7 @@ const FoodDetails = () => {
   const [quantity, setQuantity] = useState(100);
   const [isLoading, setIsLoading] = useState(false);
 
-  const addLog = useLogStore((state)=>state.logFood);
+  const loadLogs = useLogStore((state)=>state.loadFoodLogs);
 
 
   useEffect(() =>{
@@ -30,7 +30,9 @@ const FoodDetails = () => {
     }
     try {
       setIsLoading(true);
-      await addLog(Number(id),quantity);
+      const foodId = Number(id);
+      await logFood({foodId, quantity});
+      await loadLogs();
       
       
         

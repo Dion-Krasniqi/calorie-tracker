@@ -36,12 +36,13 @@ class LogFoodAPI_view(generics.CreateAPIView): # Logging food
         food_instance.last_tracked = timezone.now()
         food_instance.save(update_fields=['time_tracked','last_tracked'])
         quantity = serializer.validated_data.get('quantity')
-        print(food_instance)
 
         calories_consumed = (quantity/100) * food_instance.calories
 
         serializer.save(user=self.request.user, calories_consumed=calories_consumed)
-        print(food_instance.name)
+
+
+
 
 #class DeleteLogAPI_view(generics.DestroyAPIView):
 #    queryset = LoggedFood.objects.all()
@@ -85,11 +86,6 @@ class DailyLoggedFoodAPI_view(generics.ListAPIView): # Current Day foods
         return self.queryset.filter(user=self.request.user)
     
 
-class FoodListAPI_view(generics.ListAPIView): # All foods in the database
-    queryset = Food.objects.all().order_by('name')
-    serializer_class = FoodSerializer
-
-    permission_classes = [IsAuthenticated]
 
 class FoodListAPI_view(generics.ListAPIView): # All foods in the database
     queryset = Food.objects.all().order_by('last_tracked')
@@ -123,9 +119,9 @@ class FoodListAPI_view(generics.ListAPIView): # All foods in the database
 #
 #       return queryset.order_by('name')
 class GeneralFoodSearchAPI_view(generics.ListAPIView): # All foods in the database
+    queryset = Food.objects.all().order_by('-time_tracked')[:25] 
     serializer_class = FoodSerializer
     permission_classes = [IsAuthenticated]
-    queryset = Food.objects.all().order_by('-last_tracked')[:25] 
 
 class FoodSearchAPI_view(generics.ListAPIView):
 

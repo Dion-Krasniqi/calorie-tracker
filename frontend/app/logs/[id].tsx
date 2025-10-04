@@ -6,6 +6,7 @@ import { fetchLogDetails, TRACKER_CONFIG } from '@/services/api';
 import * as SecureStore from 'expo-secure-store';
 import { images } from '@/constants/images';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { useLogStore } from '@/state/keepState';
 
 
 const LogDetails = () => {
@@ -21,6 +22,7 @@ const LogDetails = () => {
       }, []);
 
   const router = useRouter();
+  const loadLogs = useLogStore((state)=>state.loadFoodLogs);
 
   const handleSubmit = async () => {
       if (isLoading) {
@@ -47,6 +49,7 @@ const LogDetails = () => {
       } catch (error){
         
       } finally {
+        loadLogs();
         setLoading(false);
         router.push('/');
         

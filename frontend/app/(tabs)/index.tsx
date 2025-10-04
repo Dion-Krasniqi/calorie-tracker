@@ -61,10 +61,10 @@ export default function Index() {
   const {data: intakeToday, refetch: loadIntake} = useFetch( ()=> fetchIntakeCurrent(), false);  
   
   const logs = useLogStore((state)=>state.foodlogs);
-
+  const loadLogs = useLogStore((state)=>state.loadFoodLogs)
   const updateView = () => {
       loadIntake();
-      //loadLogs();
+      loadLogs();
   }
   
 

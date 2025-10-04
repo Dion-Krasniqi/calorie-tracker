@@ -1,24 +1,22 @@
 import { View, Text, FlatList, TouchableOpacity, Button, Pressable } from 'react-native'
-import React from 'react'
-import FoodCard from './foodCard'
-import { Link } from 'expo-router'
-import * as SecureStore from 'expo-secure-store';
-import { deleteLogDetails, fetchWithAuth, TRACKER_CONFIG } from '@/services/api';
+import React from 'react';
+import FoodCard from './foodCard';
+import { Link } from 'expo-router';
+import { deleteLogDetails} from '@/services/api';
+import { useLogStore } from '@/state/keepState';
 
 
 
 //@ts-ignore
 const LoggedFoodCard = ({id, food, quantity, date_consumed, calories_consumed, updateView}) => {
+  //const deleteLog = useLogStore((state)=>state.deleteLog) Zustand
   const handleDelete = async (id:string) => {
-      
-      
-      try {
-          const del = await deleteLogDetails(id);
-          updateView();
-      } catch (error){
+   try {
+        await deleteLogDetails(Number(id));
+        updateView();
+   }catch (error){
         console.log(error);
-      } 
-    }
+  }}
 
 
   return (
