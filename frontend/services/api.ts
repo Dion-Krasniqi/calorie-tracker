@@ -75,8 +75,8 @@ export const logFood = async ({foodId,quantity}:{foodId:number,quantity:number})
         if (!response.ok){
           throw new Error('Failed to add food');
         }
-        const data = response.json();
-        return data;
+        console.log(response?.foodinstance);
+        //return {id,food,quantity,date_consumed,calories_consumed}:{LoggedFood}
           
       }catch (error) {
         throw (error)
@@ -88,9 +88,9 @@ export const logFood = async ({foodId,quantity}:{foodId:number,quantity:number})
 
 
 
-export const fetchFoods = async ({ query } : { query : string}) => {
+export const fetchFoods = async ({ query} : { query : string}) => {
     const endpoint = query ? `caloriebalance/api/foodsearch/?name=${encodeURIComponent(query)}`
-    :`caloriebalance/api/recentfoods/`;
+    :`caloriebalance/api/genfoodsearch/`;
     const data = await customGetFetch<Array<Food>>(endpoint);
 
     return data;

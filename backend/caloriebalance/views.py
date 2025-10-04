@@ -41,7 +41,7 @@ class LogFoodAPI_view(generics.CreateAPIView): # Logging food
         calories_consumed = (quantity/100) * food_instance.calories
 
         serializer.save(user=self.request.user, calories_consumed=calories_consumed)
-        return {calories_consumed}
+        print(food_instance.name)
 
 #class DeleteLogAPI_view(generics.DestroyAPIView):
 #    queryset = LoggedFood.objects.all()
@@ -91,33 +91,12 @@ class FoodListAPI_view(generics.ListAPIView): # All foods in the database
 
     permission_classes = [IsAuthenticated]
 
-class RecentFoodListAPI_view(generics.ListAPIView):
+class FoodListAPI_view(generics.ListAPIView): # All foods in the database
+    queryset = Food.objects.all().order_by('last_tracked')
+    serializer_class = FoodSerializer
 
     permission_classes = [IsAuthenticated]
-    serializer_class = FoodSerializer
- 
 
-    def get_queryset(self):
-        
-        #logged_recent = LoggedFood.objects.filter(user=self.request.user).order_by('-date_consumed', '-id')[:10]
-        #food_ids = [log.food.id for log in logged_recent]
-        #queryset = Food.objects.filter(id__in=food_ids)
-
-        #queryset = sorted(queryset, key=lambda f: food_ids.index(f.id))
-        queryset = Food.objects.all().order_by('last_tracked')
-        return queryset
-
-class MostFrequentFoodListAPI_view(generics.ListAPIView):
-
-    permission_classes = [IsAuthenticated]
-    serializer_class = FoodSerializer
- 
-
-    def get_queryset(self):
-
-        queryset = Food.objects.all().order_by('-time_tracked')[:2]
-        return queryset
-    
 #class OLDFoodSearchAPI_view(generics.ListAPIView):
 #
 #    permission_classes = [IsAuthenticated]
@@ -143,6 +122,10 @@ class MostFrequentFoodListAPI_view(generics.ListAPIView):
 #            queryset = queryset.filter(brand__icontains=food_brand) 
 #
 #       return queryset.order_by('name')
+class GeneralFoodSearchAPI_view(generics.ListAPIView): # All foods in the database
+    serializer_class = FoodSerializer
+    permission_classes = [IsAuthenticated]
+    queryset = Food.objects.all().order_by('-last_tracked')[:25] 
 
 class FoodSearchAPI_view(generics.ListAPIView):
 
@@ -161,10 +144,13 @@ class FoodSearchAPI_view(generics.ListAPIView):
         
         food_name = self.request.query_params.get('name',None)
         if food_name:
-            queryset = Food.objects.filter(name__icontains=food_name)
+            queryset = Food.objects.filter(name__icontains=food_name).order_by('last_tracked')[:25]
+            
+
         
 
         return queryset
+    
     
     
 class FoodDetailAPI_view(generics.RetrieveAPIView): # Single food detail

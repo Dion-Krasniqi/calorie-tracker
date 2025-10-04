@@ -14,9 +14,9 @@ const Search = () => {
   
 
   const [searchQuery, setSearchQuery] = useState('');
-  const [mostRecent, setMostRecent] = useState(true);
+  //const [mostRecent, setMostRecent] = useState(true);
 
-  const {data: foods, loading, error, refetch: loadFoods, reset} = useFetch(() => fetchFoods({ query:  searchQuery }), false);
+  const {data: foods, loading, error, refetch: loadFoods, reset} = useFetch(() => fetchFoods({ query:  searchQuery}), false);
 
   useEffect(() =>{
     const timeOutId = setTimeout(async () => {
@@ -50,11 +50,11 @@ const Search = () => {
                     <SearchBar placeholder='Search foods...'
                                value={searchQuery}
                                onChangeText={(text: string) => setSearchQuery(text)} />
-                    <View>
+                    {/*<View>
                       <TouchableOpacity onPress={()=>setMostRecent(!mostRecent)}>
                         <Text className='text-white'>{mostRecent ? ('Recent'):('Frequent')}</Text>
                       </TouchableOpacity>
-                    </View>
+                    </View>*/}
                   </View>
                   {loading && 
                     (<ActivityIndicator size='large' color='#ffffff' className='my-3'/>)}
