@@ -147,7 +147,7 @@ export const fetchProfile = async () => {
     
 }
 
-export const updateExpenditure = async (expenditure:string) => {
+export const updateExpenditure = async (expenditure:number) => {
   const endpoint = `account/api/profile/update/`;
   const options = {method: 'PATCH', headers: {'Content-Type': 'application/json'},  body: JSON.stringify({expenditure:expenditure})};
   const data = await fetchWithAuth(endpoint,options);

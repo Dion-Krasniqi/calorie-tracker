@@ -1,5 +1,4 @@
-import { deleteLogDetails, fetchLogs, fetchLogsCurrent, logFood } from '@/services/api';
-import useFetch from '@/services/useFetch';
+import { deleteLogDetails, fetchLogs, fetchLogsCurrent, fetchProfile, logFood, updateExpenditure } from '@/services/api';
 import { create } from 'zustand';
 
 
@@ -29,4 +28,29 @@ export const useLogStore = create<LogStore>((set)=>({
         const result = await fetchLogs();
         set({foodlogs:result})
     },
+}))
+
+
+interface ProfileStore {
+    username: string;
+    expenditure: number;
+    loadProfileInfo: ()=>void;
+    changeExpenditure: (newExp:number)=>void;
+}
+
+export const useProfileStore = create<ProfileStore>((set)=>({
+    username:'',
+    expenditure:0,
+    loadProfileInfo: async()=>{
+        const info = await fetchProfile();
+        console.log('called');
+        set({username:info.username});
+        set({expenditure:info.expenditure});
+    },
+    changeExpenditure: async(newExp)=>{
+        set({expenditure:newExp});
+        updateExpenditure(newExp);
+
+    },
+
 }))

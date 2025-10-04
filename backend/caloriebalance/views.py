@@ -178,10 +178,7 @@ class GetDailyIntakeAPI_view(APIView):
         response_data['total_protein'] = round(response_data['total_protein'],2)
         response_data['total_carbohydrates'] = round(response_data['total_carbohydrates'],2)
         response_data['total_fats'] = round(response_data['total_fats'],2)
-        expenditure = request.user.expenditure   
-        if expenditure is not None:
-            if expenditure > 0:
-                response_data['expenditure'] = expenditure
+        
 
         return Response(response_data, status=status.HTTP_200_OK)
                 

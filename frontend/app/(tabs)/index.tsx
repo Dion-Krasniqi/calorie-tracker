@@ -14,7 +14,7 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import MacroChart from "@/components/macroChart";
 import CalorieChart from "@/components/calorieChart";
 import { Alert, BackHandler } from 'react-native';
-import { useLogStore } from "@/state/keepState";
+import { useLogStore, useProfileStore } from "@/state/keepState";
 
 
 
@@ -59,9 +59,12 @@ export default function Index() {
   //const {data: logsFood, loading:logsLoading, error:logsError, refetch:loadLogs} = useFetch(() =>fetchLogsCurrent(), false);
   const {data: fetchedProfile, refetch: loadProfile} = useFetch( ()=> fetchProfile(), false);      
   const {data: intakeToday, refetch: loadIntake} = useFetch( ()=> fetchIntakeCurrent(), false);  
-  
+  const expenditureState = useProfileStore((state)=>state.expenditure);
+
   const logs = useLogStore((state)=>state.foodlogs);
   const loadLogs = useLogStore((state)=>state.loadFoodLogs)
+
+
   const updateView = () => {
       loadIntake();
       loadLogs();
@@ -94,14 +97,14 @@ export default function Index() {
 
             <View className="items-center mt-4 rounded"   style={{height:300}}>
               {/*@ts-ignore */}
-              {intakeToday  && intakeToday.expenditure ?
+              {intakeToday  && (expenditureState>0) ?
                 (<ScrollView horizontal
                           pagingEnabled
                           showsHorizontalScrollIndicator={false}
                           style={{width: screenWidth}}
                           >
                   <View style={{width: screenWidth, alignItems:'center' }}> 
-                    <CalorieChart calories={intakeToday.total_calories} expenditure={intakeToday.expenditure}/>
+                    <CalorieChart calories={intakeToday.total_calories} expenditure={expenditureState}/>
                   </View>
                   <View style={{width: screenWidth, alignItems:'center' }}> 
                     <MacroChart protein={intakeToday.total_protein} 
