@@ -21,7 +21,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key")
 DEBUG = os.environ.get('DEBUG', 'FALSE') == 'TRUE'
 #DEBUG = 'TRUE'
 
-DATABASE = os.environ.get('USE_POSTGRES', 'FALSE') 
+#DATABASE = os.environ.get('USE_POSTGRES', 'FALSE') 
 
 #ALLOWED_HOSTS = ['192.168.1.9']
 ALLOWED_HOSTS = ['*']
@@ -80,7 +80,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 
-if DATABASE == 'TRUE':
+#if DATABASE == 'TRUE':
 
     #DATABASES = {
     #'default': {
@@ -90,18 +90,14 @@ if DATABASE == 'TRUE':
     #    'HOST': os.environ.get('POSTGRES_HOST', 'localhost'),
     #    'PORT': os.environ.get('POSTGRES_PORT', 5432),
     #}
-    DATABASES = {
-    'default': 
-        dj_database_url.config(default=os.environ.get('DATABASE_URL'),conn_max_age=600,
-            ssl_require=True )
-    }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
+DATABASES = { 'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'),conn_max_age=600, ssl_require=True )}
+#else:
+#    DATABASES = {
+#        'default': {
+#            'ENGINE': 'django.db.backends.sqlite3',
+#            'NAME': BASE_DIR / 'db.sqlite3',
+#        }
+#    }
 
     
 
