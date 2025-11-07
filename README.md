@@ -1,2 +1,2 @@
 # calorie-tracker
-Calorie tracker with integrated AI nutrition recommender 
+Calorie tracker with Django serving as backend and React Native as frontend
